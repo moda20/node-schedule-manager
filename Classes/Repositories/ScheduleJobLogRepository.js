@@ -73,6 +73,22 @@ class ScheduleJobLogRepository {
       return {success:false, err: err.toString()};
     }
   }
+
+  static async deleteLog(jobId) {
+    try {
+      let sql = '';
+      let sqlData = [jobId];
+
+      sql = 'DELETE FROM schedule_job_log WHERE job_id = ?'
+
+      let result = await MySQL.query(sql, sqlData, {selectQuery: true});
+
+      return {success:true, result:result};
+
+    }catch(err) {
+      return {success:false, err: err.toString()};
+    }
+  }
 }
 
 module.exports = ScheduleJobLogRepository;
