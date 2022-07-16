@@ -92,8 +92,14 @@ class ScheduleJobRepository {
 
   static async getJobsByStatus(status) {
     try {
-      let sql = 'SELECT * FROM schedule_job WHERE status = ?';
+      let sql = '';
       let sqlData = [status];
+      if(Array.isArray(status)){
+        sql = "SELECT * FROM schedule_job WHERE status IN (?)";
+      }else  {
+        sql = 'SELECT * FROM schedule_job WHERE status = ?';
+      }
+
       let result = await MySQL.query(sql, sqlData, {selectQuery: true});
       let jobs = [];
 
