@@ -185,7 +185,7 @@ class ScheduleJobManager {
     try {
       let machine = IP.address();
       let jobLogId = job.getId();
-      let cronSettingArr = getJobResult.getCronSetting().split(' ');
+      let cronSettingArr = job.getCronSetting().split(' ');
 
       //joblogid is a primary key in database;
       if(cronSettingArr.length >= 6) {
