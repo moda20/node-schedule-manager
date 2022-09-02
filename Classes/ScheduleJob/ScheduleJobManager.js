@@ -172,7 +172,7 @@ class ScheduleJobManager {
   }
 
 
-  async jobRegistration(jobId){
+  async jobRegistration(jobId, {singular} = {}){
     //reload the job entity in case any param update;
     let getJobResult = await ScheduleJobRepository.getJobById(jobId);
 
@@ -201,6 +201,10 @@ class ScheduleJobManager {
       }else if(cronSettingArr[4] !== '*') {
         jobLogId = jobLogId + '-' + Moment().format('YYYYMMDDE');
       }
+      if(singular){
+        jobLogId = jobLogId + '-singular-' + Math.floor(Math.random() * 100000)
+      }
+
 
       //if not exclusive job, add ip address as part of joblogid to prevent duplicate key;
       if(!job.getExclusive()) {
@@ -217,13 +221,23 @@ class ScheduleJobManager {
       });
 
       let newLogResult = await ScheduleJobLogRepository.newLog(log);
-
       if(!newLogResult.success)
         return newLogResult;
+
+      if(singular){
+        let consumer = require(AppRoot + job.getConsumer());
+        consumer.on(job.getName());
+      }
 
       //emit job event;
       ScheduleJobEventBus.emit('scheduleJob:' + job.getName(), job, log);
 
+      if(singular){
+        ScheduleJobEventBus.on('complete:'+job.getName(), ()=>{
+          consumer.off(job.getName());
+          ScheduleJobEventBus.off('complete:'+job.getName());
+        })
+      }
       return {success:true};
 
     }catch(err) {
