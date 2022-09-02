@@ -171,6 +171,80 @@ class ScheduleJobManager {
     return false;
   }
 
+
+  async jobRegistration(jobId, {singular} = {}){
+    //reload the job entity in case any param update;
+    let getJobResult = await ScheduleJobRepository.getJobById(jobId);
+
+    if(!getJobResult.success) {
+      return getJobResult;
+    }
+
+    let job = getJobResult.job;
+
+    try {
+      let machine = IP.address();
+      let jobLogId = job.getId();
+      let cronSettingArr = job.getCronSetting().split(' ');
+
+      //joblogid is a primary key in database;
+      if(cronSettingArr.length >= 6) {
+        jobLogId = jobLogId + '-' + Moment().format('YYYYMMDDHHmmss');
+      }else if(cronSettingArr[0] !== '*') {
+        jobLogId = jobLogId + '-' + Moment().format('YYYYMMDDHHmm');
+      }else if(cronSettingArr[1] !== '*') {
+        jobLogId = jobLogId + '-' + Moment().format('YYYYMMDDHH');
+      }else if(cronSettingArr[2] !== '*') {
+        jobLogId = jobLogId + '-' + Moment().format('YYYYMMDD');
+      }else if(cronSettingArr[3] !== '*') {
+        jobLogId = jobLogId + '-' + Moment().format('YYYYMM');
+      }else if(cronSettingArr[4] !== '*') {
+        jobLogId = jobLogId + '-' + Moment().format('YYYYMMDDE');
+      }
+      if(singular){
+        jobLogId = jobLogId + '-singular-' + Math.floor(Math.random() * 100000)
+      }
+
+
+      //if not exclusive job, add ip address as part of joblogid to prevent duplicate key;
+      if(!job.getExclusive()) {
+        jobLogId = jobLogId + '-' + machine;
+      }
+
+      let log = new ScheduleJobLog({
+        job_log_id: jobLogId,
+        job_id: job.getId(),
+        machine: machine,
+        start_time: Moment().format('YYYY-MM-DD HH:mm:ss'),
+        end_time: null,
+        result: ''
+      });
+
+      let newLogResult = await ScheduleJobLogRepository.newLog(log);
+      if(!newLogResult.success)
+        return newLogResult;
+
+      if(singular){
+        let consumer = require(AppRoot + job.getConsumer());
+        consumer.on(job.getName());
+      }
+
+      //emit job event;
+      ScheduleJobEventBus.emit('scheduleJob:' + job.getName(), job, log);
+
+      if(singular){
+        ScheduleJobEventBus.on('complete:'+job.getName(), ()=>{
+          consumer.off(job.getName());
+          ScheduleJobEventBus.off('complete:'+job.getName());
+        })
+      }
+      return {success:true};
+
+    }catch(err) {
+      return {success: false, err:err.toString()};
+    }
+  }
+
   async startJobs(jobs) {
 
     for(let i = 0 ; i < jobs.length ; i++) {
@@ -184,62 +258,7 @@ class ScheduleJobManager {
 
         let task = Cron.schedule(cronSetting, async () => {
 
-          //reload the job entity in case any param update;
-          let getJobResult = await ScheduleJobRepository.getJobById(jobId);
-
-          if(!getJobResult.success) {
-            return getJobResult;
-          }
-
-          let job = getJobResult.job;
-
-          try {
-            let machine = IP.address();
-            let jobLogId = job.getId();
-            let cronSettingArr = cronSetting.split(' ');
-
-            //joblogid is a primary key in database;
-            if(cronSettingArr.length >= 6) {
-              jobLogId = jobLogId + '-' + Moment().format('YYYYMMDDHHmmss');
-            }else if(cronSettingArr[0] !== '*') {
-              jobLogId = jobLogId + '-' + Moment().format('YYYYMMDDHHmm');
-            }else if(cronSettingArr[1] !== '*') {
-              jobLogId = jobLogId + '-' + Moment().format('YYYYMMDDHH');
-            }else if(cronSettingArr[2] !== '*') {
-              jobLogId = jobLogId + '-' + Moment().format('YYYYMMDD');
-            }else if(cronSettingArr[3] !== '*') {
-              jobLogId = jobLogId + '-' + Moment().format('YYYYMM');
-            }else if(cronSettingArr[4] !== '*') {
-              jobLogId = jobLogId + '-' + Moment().format('YYYYMMDDE');
-            }
-
-            //if not exclusive job, add ip address as part of joblogid to prevent duplicate key;
-            if(!job.getExclusive()) {
-              jobLogId = jobLogId + '-' + machine;
-            }
-
-            let log = new ScheduleJobLog({
-              job_log_id: jobLogId,
-              job_id: job.getId(),
-              machine: machine,
-              start_time: Moment().format('YYYY-MM-DD HH:mm:ss'),
-              end_time: null,
-              result: ''
-            });
-
-            let newLogResult = await ScheduleJobLogRepository.newLog(log);
-
-            if(!newLogResult.success)
-              return newLogResult;
-
-            //emit job event;
-            ScheduleJobEventBus.emit('scheduleJob:' + job.getName(), job, log);
-
-            return {success:true};
-
-          }catch(err) {
-            return {success: false, err:err.toString()};
-          }
+         return this.jobRegistration(jobId)
     		});
 
         this.runningJob.push({

@@ -3,6 +3,7 @@ const ScheduleJobLogRepository = require('../../Repositories/ScheduleJobLogRepos
 const ScheduleJobEventBus = require('../ScheduleJobEventBus.js');
 
 class JobConsumer {
+  job;
   constructor() {
   }
 
@@ -21,11 +22,13 @@ class JobConsumer {
     if(!updateResult.success)
       return updateResult;
     else {
+      ScheduleJobEventBus.emit('completed:'+this.job?.getName());
       return {success:true};
     }
   }
 
   async run(job, jobLog) {
+    this.job = job;
     this.complete(jobLog, '');
   }
 }
