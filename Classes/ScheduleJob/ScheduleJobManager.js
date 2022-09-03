@@ -9,6 +9,7 @@ const ScheduleJobLog = require('../Entities/ScheduleJobLog.js');
 const ScheduleJobRepository = require('../Repositories/ScheduleJobRepository.js');
 const ScheduleJobLogRepository = require('../Repositories/ScheduleJobLogRepository.js');
 const ScheduleJobEventBus = require('./ScheduleJobEventBus.js');
+const ScheduleJobLogEventBus = require('./ScheduleJobLogEventBus');
 const InitSQL = require('../../init_sql.js');
 
 class ScheduleJobManager {
@@ -217,7 +218,8 @@ class ScheduleJobManager {
         machine: machine,
         start_time: Moment().format('YYYY-MM-DD HH:mm:ss'),
         end_time: null,
-        result: ''
+        result: '',
+        logEventBus: ScheduleJobLogEventBus
       });
 
       let newLogResult = await ScheduleJobLogRepository.newLog(log);
