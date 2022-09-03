@@ -229,6 +229,7 @@ class ScheduleJobManager {
       if(singular){
         let consumer = require(AppRoot + job.getConsumer());
         consumer.on(job.getName());
+        job.setUniqueSingularId(jobLogId);
       }
 
       //emit job event;
@@ -240,7 +241,7 @@ class ScheduleJobManager {
           ScheduleJobEventBus.off('complete:'+job.getName());
         })
       }
-      return {success:true};
+      return {success:true, uniqueSingularId: job.getUniqueSingularId()};
 
     }catch(err) {
       return {success: false, err:err.toString()};
