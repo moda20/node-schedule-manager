@@ -22,7 +22,7 @@ class JobConsumer {
     if(!updateResult.success)
       return updateResult;
     else {
-      ScheduleJobEventBus.emit('completed:'+this.job?.getName());
+      ScheduleJobEventBus.emit('completed:'+this.job?.getName(), this.job);
       return {success:true};
     }
   }
