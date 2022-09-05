@@ -9,6 +9,7 @@ const ScheduleJobLog = require('../Entities/ScheduleJobLog.js');
 const ScheduleJobRepository = require('../Repositories/ScheduleJobRepository.js');
 const ScheduleJobLogRepository = require('../Repositories/ScheduleJobLogRepository.js');
 const ScheduleJobEventBus = require('./ScheduleJobEventBus.js');
+const ScheduleJobLogEventBus = require('./ScheduleJobLogEventBus');
 const InitSQL = require('../../init_sql.js');
 
 class ScheduleJobManager {
@@ -217,7 +218,8 @@ class ScheduleJobManager {
         machine: machine,
         start_time: Moment().format('YYYY-MM-DD HH:mm:ss'),
         end_time: null,
-        result: ''
+        result: '',
+        logEventBus: ScheduleJobLogEventBus
       });
 
       let newLogResult = await ScheduleJobLogRepository.newLog(log);
@@ -227,6 +229,7 @@ class ScheduleJobManager {
       if(singular){
         let consumer = require(AppRoot + job.getConsumer());
         consumer.on(job.getName());
+        job.setUniqueSingularId(jobLogId);
       }
 
       //emit job event;
@@ -238,7 +241,7 @@ class ScheduleJobManager {
           ScheduleJobEventBus.off('complete:'+job.getName());
         })
       }
-      return {success:true};
+      return {success:true, uniqueSingularId: job.getUniqueSingularId()};
 
     }catch(err) {
       return {success: false, err:err.toString()};

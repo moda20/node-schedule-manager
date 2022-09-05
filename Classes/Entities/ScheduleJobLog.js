@@ -6,6 +6,7 @@ class ScheduleJobLog {
     this.startTime = dataObj.start_time;
     this.endTime = dataObj.end_time;
     this.result = dataObj.result;
+    this.logEventBus = dataObj.logEventBus;
   }
 
   getId() {
@@ -38,6 +39,14 @@ class ScheduleJobLog {
 
   setResult(result) {
     this.result = result;
+  }
+
+  setEventLogBus(eventLogBus){
+    this.logEventBus = eventLogBus;
+  }
+
+  getEventLogBus(){
+    return this.logEventBus;
   }
 }
 

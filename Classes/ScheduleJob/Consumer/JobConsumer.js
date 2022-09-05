@@ -8,11 +8,11 @@ class JobConsumer {
   }
 
   on(jobName) {
-    ScheduleJobEventBus.on('scheduleJob:' + jobName, (...args) => this.run(...args));
+    ScheduleJobEventBus.on('scheduleJob:' + jobName, (...args) => this.preRun(...args));
   }
 
   off(jobName) {
-    ScheduleJobEventBus.off('scheduleJob:' + jobName, (...args) => this.run(...args));
+    ScheduleJobEventBus.off('scheduleJob:' + jobName, (...args) => this.preRun(...args));
   }
 
   async complete(jobLog, result) {
@@ -22,13 +22,22 @@ class JobConsumer {
     if(!updateResult.success)
       return updateResult;
     else {
-      ScheduleJobEventBus.emit('completed:'+this.job?.getName());
+      ScheduleJobEventBus.emit('completed:'+this.job?.getName(), this.job);
       return {success:true};
     }
   }
 
-  async run(job, jobLog) {
+  logEvent(data){
+    this.jobLog.logEventBus.emit('jobLog:'+this.job?.getUniqueSingularId(), data)
+  }
+
+  preRun(job, jobLog){
     this.job = job;
+    this.jobLog = jobLog;
+    this.run(job, jobLog);
+  }
+
+  async run(job, jobLog) {
     this.complete(jobLog, '');
   }
 }

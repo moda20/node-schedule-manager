@@ -7,6 +7,7 @@ class ScheduleJob {
     this.status = dataObj.status;
     this.param = dataObj.job_param;
     this.exclusive = dataObj.exclusive;
+    this.uniqueSingularId = dataObj.uniqueSingularId;
   }
 
   getId() {
@@ -63,6 +64,14 @@ class ScheduleJob {
 
   setStatus(status) {
     this.status = status;
+  }
+
+  setUniqueSingularId(id){
+    this.uniqueSingularId = id;
+  }
+
+  getUniqueSingularId(){
+    return this.uniqueSingularId;
   }
 
 }
