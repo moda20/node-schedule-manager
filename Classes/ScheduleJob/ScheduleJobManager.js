@@ -239,7 +239,10 @@ class ScheduleJobManager {
 
       if(singular){
         ScheduleJobEventBus.on('complete:'+job.getName(), ()=>{
-          consumer.off(job.getName());
+          if(!this.isRunningJob(job.getId())){
+            let consumer = require(AppRoot + job.getConsumer());
+            consumer.off(job.getName());
+          }
           ScheduleJobEventBus.off('complete:'+job.getName());
         })
       }
