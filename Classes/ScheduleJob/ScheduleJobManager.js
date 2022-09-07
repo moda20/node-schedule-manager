@@ -227,8 +227,10 @@ class ScheduleJobManager {
         return newLogResult;
 
       if(singular){
-        let consumer = require(AppRoot + job.getConsumer());
-        consumer.on(job.getName());
+        if(!this.isRunningJob(job.getId())){
+          let consumer = require(AppRoot + job.getConsumer());
+          consumer.on(job.getName());
+        }
         job.setUniqueSingularId(jobLogId);
       }
 
