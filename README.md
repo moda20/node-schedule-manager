@@ -284,6 +284,19 @@ Stop Job By Id
 let result = await ScheduleJobManager.stopJobById(jobId);
 ```
 
+Instantly Run a job Consumer
+```javascript
+
+/*
+* Rnu a job's Consumer by id out of cronSetting timing
+* @Param {String} Job Id
+* @return {Object}
+*   {Boolean} success - indicate stop job by id success or not
+*   {String} err - Error message
+*/
+let result = await ScheduleJobManager.jobRegistration(jobId, {singular: true});
+```
+
 ## Job Log API Doc
 
 Schedule Job Log Object
