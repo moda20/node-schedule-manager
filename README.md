@@ -343,3 +343,21 @@ let jobLogs = jobLogsResult.logs;
 let jobLogsResult = await ScheduleJobManager.getJobLog({order: 'ASC', offset: 0, limit:10}, '1');
 let jobLogs = jobLogsResult.logs;
 ```
+
+
+Get Job stats best on Logs
+```javascript
+
+/*
+* Get Job log stats based on given jobIds;
+* @Param
+*   {Array<Number>} jobId - list of Ids to get stats of
+* @return {Array<Object>}
+*   {Number} avgTime - Average time taken per run
+*   {date} latestStart - latest run start time 
+*   {date} latestEnd - latest run end time
+*/
+
+//get job log for all job;
+let jobLogsResult = await ScheduleJobManager.getLogStats([1, 2]);
+```
