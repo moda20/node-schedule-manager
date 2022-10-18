@@ -74,6 +74,27 @@ class ScheduleJobLogRepository {
     }
   }
 
+  static async getLogStats(jobId) {
+    try {
+
+      let sqlData = [];
+      const jobIds = Array.isArray(jobId) ? jobId : [jobId];
+
+      let sql = `SELECT job_id as id, AVG(start_time - end_time) as avgTime, MAX(start_time) as latestStart, MAX(end_time) as LatestEnds from schedule_job_log group by job_id ${jobId ? `where job_id IN (${jobIds.join(',')})`: ''}`;
+
+      if(sql === '') {
+        return {success:false, err: 'get log failed'};
+      }
+
+      let result = await MySQL.query(sql, sqlData, {selectQuery: true});
+
+      return {success:true, result:result};
+
+    }catch(err) {
+      return {success:false, err: err.toString()};
+    }
+  }
+
   static async deleteLog(jobId) {
     try {
       let sql = '';
