@@ -80,13 +80,13 @@ class ScheduleJobLogRepository {
       let sqlData = [];
       const jobIds = Array.isArray(jobId) ? jobId : [jobId];
 
-      let sql = `SELECT job_id as id, AVG(start_time - end_time) as avgTime, MAX(start_time) as latestStart, MAX(end_time) as LatestEnds from schedule_job_log group by job_id ${jobId ? `where job_id IN (${jobIds.join(',')})`: ''}`;
+      let sql = `SELECT job_id as id, AVG(end_time - start_time) as avgTime, MAX(start_time) as latestStart, (select end_time as lastEnds from schedule_job_log where start_time = (select MAX(start_time) from schedule_job_log as sji where sji.job_id = id)) as LatestEnds from schedule_job_log ${jobId ? `where job_id IN (${jobIds.map(e=>"\'"+e+"\'").join(',')})`: ''} group by job_id`;
 
       if(sql === '') {
         return {success:false, err: 'get log failed'};
       }
 
-      let result = await MySQL.query(sql, sqlData, {selectQuery: true});
+      let result = await MySQL.query(sql, undefined, {selectQuery: true});
 
       return {success:true, result:result};
 
