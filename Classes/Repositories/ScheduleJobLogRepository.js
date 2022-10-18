@@ -86,7 +86,7 @@ class ScheduleJobLogRepository {
         return {success:false, err: 'get log failed'};
       }
 
-      let result = await MySQL.query(sql, undefined, {selectQuery: true});
+      let result = await MySQL.query(sql, sqlData, {selectQuery: true});
 
       return {success:true, result:result};
 
