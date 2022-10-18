@@ -58,6 +58,9 @@ class ScheduleJobManager {
     let result = await ScheduleJobLogRepository.deleteLog(jobId);
     return result;
   }
+  async getLogStats(jobIds) {
+    return await ScheduleJobLogRepository.getLogStats(jobIds);
+  }
 
   async newJob(name, cronSetting, param, consumer, exclusive, status) {
     try {
