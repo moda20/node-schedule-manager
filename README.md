@@ -361,3 +361,20 @@ Get Job stats best on Logs
 //get job log for all job;
 let jobLogsResult = await ScheduleJobManager.getLogStats([1, 2]);
 ```
+
+
+Get Job Error latest logs 
+```javascript
+
+/*
+* Get Job log errors based on given jobIds;
+* @Param
+*   {Array<Number>} jobId - list of Ids to get stats of
+* @return {Array<Object>}
+*   {Number} id - job id
+*   {String} error - latest run error (null if not error was recorded)
+*/
+
+//get job log for all job;
+let jobErrorResult = await ScheduleJobManager.getLogErrors([1, 2]);
+```

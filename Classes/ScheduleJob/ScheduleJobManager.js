@@ -62,6 +62,10 @@ class ScheduleJobManager {
     return await ScheduleJobLogRepository.getLogStats(jobIds);
   }
 
+  async getLogErrors(jobIds) {
+    return await ScheduleJobLogRepository.getLatestJobError(jobIds);
+  }
+
   async newJob(name, cronSetting, param, consumer, exclusive, status) {
     try {
       let job = new ScheduleJob({
