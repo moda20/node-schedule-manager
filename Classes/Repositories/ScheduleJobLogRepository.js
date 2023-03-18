@@ -114,7 +114,7 @@ class ScheduleJobLogRepository {
                  from schedule_job_log sjl
                         INNER JOIN (SELECT job_id, MAX(start_time) AS latestStartTime FROM schedule_job_log GROUP BY job_id) groupedLogs
                             ON sjl.job_id = groupedLogs.job_id AND sjl.start_time = groupedLogs.latestStartTime
-                   ${jobId ? `where job_id IN (${jobIds.map(e => "\'" + e + "\'").join(',')})` : ''}
+                   ${jobId ? `where sjl.job_id IN (${jobIds.map(e => "\'" + e + "\'").join(',')})` : ''}
                  `;
       if(sql === '') {
         return {success:false, err: 'get log failed'};
