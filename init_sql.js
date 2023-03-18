@@ -21,6 +21,7 @@ module.exports = {
     '`start_time` datetime NOT NULL, ' +
     '`end_time` datetime DEFAULT NULL, ' +
     '`result` longtext, ' +
+    '`error` longtext, ' +
     'PRIMARY KEY (`job_log_id`), ' +
     'KEY `job_id` (`job_id`) ' +
   ') ENGINE=InnoDB DEFAULT CHARSET=utf8'

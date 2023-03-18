@@ -7,6 +7,7 @@ class ScheduleJobLog {
     this.endTime = dataObj.end_time;
     this.result = dataObj.result;
     this.logEventBus = dataObj.logEventBus;
+    this.error = dataObj.error;
   }
 
   getId() {
@@ -33,12 +34,20 @@ class ScheduleJobLog {
     return this.result;
   }
 
+  getError() {
+    return this.error;
+  }
+
   setEndTime(endTime) {
     this.endTime = endTime;
   }
 
   setResult(result) {
     this.result = result;
+  }
+
+  setError(error) {
+    this.error = error;
   }
 
   setEventLogBus(eventLogBus){

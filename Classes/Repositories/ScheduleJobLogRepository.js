@@ -23,8 +23,8 @@ class ScheduleJobLogRepository {
 
   static async update(log) {
     try {
-      let sql = 'UPDATE schedule_job_log SET end_time = ?, result = ? WHERE job_log_id = ?';
-      let sqlData = [log.getEndTime(), log.getResult(), log.getId()];
+      let sql = 'UPDATE schedule_job_log SET end_time = ?, result = ?, error = ? WHERE job_log_id = ?';
+      let sqlData = [log.getEndTime(), log.getResult(), log.getError(), log.getId()];
       let result = await MySQL.query(sql, sqlData);
       if(result.affectedRows + '' !== '1') {
         return {success:false , err: 'update job log failed'};

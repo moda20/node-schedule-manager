@@ -15,9 +15,10 @@ class JobConsumer {
     ScheduleJobEventBus.off('scheduleJob:' + jobName, (...args) => this.preRun(...args));
   }
 
-  async complete(jobLog, result) {
+  async complete(jobLog, result, error) {
     jobLog.setEndTime(Moment().format('YYYY-MM-DD HH:mm:ss'));
     jobLog.setResult(result);
+    jobLog.setError(error);
     let updateResult = await ScheduleJobLogRepository.update(jobLog);
     if(!updateResult.success)
       return updateResult;
