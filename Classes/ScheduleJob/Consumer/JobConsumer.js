@@ -1,5 +1,6 @@
 const Moment = require('moment');
 const ScheduleJobLogRepository = require('../../Repositories/ScheduleJobLogRepository.js');
+const ScheduleJobRepository = require('../../Repositories/ScheduleJobRepository');
 const ScheduleJobEventBus = require('../ScheduleJobEventBus.js');
 
 class JobConsumer {
@@ -20,8 +21,20 @@ class JobConsumer {
     jobLog.setResult(result);
     jobLog.setError(error);
     let updateResult = await ScheduleJobLogRepository.update(jobLog);
-    if(!updateResult.success)
-      return updateResult;
+    let oldAverageTime = jobLog.getAverageTime();
+    let numberOfRuns = (await ScheduleJobLogRepository.getNumberOfJobRuns(jobLog.getJobId()))?.result?.[0];
+    if(!oldAverageTime || oldAverageTime === 0){
+      const stats = (await ScheduleJobLogRepository.getLogStats(jobLog.getJobId()))?.result?.[0]
+      oldAverageTime = stats.avgTime;
+    }
+    const newTimeInSeconds = Moment(jobLog.getStartTime()).diff(Moment(jobLog.getEndTime()), "seconds")
+    const newAverageTime = oldAverageTime + ((newTimeInSeconds - oldAverageTime) / numberOfRuns);
+    const jobUpdateResult = await ScheduleJobRepository.updateJobAverageRunningTime(jobLog.getJobId(), newAverageTime)
+    if(!updateResult.success || !jobUpdateResult.success)
+      return {
+        updateResult,
+        jobUpdateResult
+      };
     else {
       ScheduleJobEventBus.emit('completed:'+this.job?.getName(), this.job);
       return {success:true};

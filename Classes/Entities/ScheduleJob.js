@@ -8,6 +8,7 @@ class ScheduleJob {
     this.param = dataObj.job_param;
     this.exclusive = dataObj.exclusive;
     this.uniqueSingularId = dataObj.uniqueSingularId;
+    this.averageTime = dataObj.averageTime;
   }
 
   getId() {
@@ -36,6 +37,14 @@ class ScheduleJob {
 
   getStats() {
     return this.status;
+  }
+
+  getAverageTime(){
+    return this.averageTime;
+  }
+
+  setAverageTime(averageTime){
+    this.averageTime = averageTime;
   }
 
   setId(id) {

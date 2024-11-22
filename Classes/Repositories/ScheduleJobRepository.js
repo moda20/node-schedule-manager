@@ -14,14 +14,15 @@ class ScheduleJobRepository {
       else
         jobParam = job.getParam();
 
-      let sql = 'INSERT INTO schedule_job (job_name, job_param, job_cron_setting, consumer, exclusive, status) VALUES (?,?,?,?,?,?)';
+      let sql = 'INSERT INTO schedule_job (job_name, job_param, job_cron_setting, consumer, exclusive, status, average_time) VALUES (?,?,?,?,?,?,?)';
       let sqlData = [
         job.getName(),
         (ScheduleJobRepository.isJSONString(job.getParam())) ? JSON.stringify(job.getParam()) : job.getParam(),
         job.getCronSetting(),
         job.getConsumer(),
         (job.getExclusive()) ? 'true' : 'false',
-        job.getStats()
+        job.getStats(),
+        0
       ];
       let result = await MySQL.query(sql, sqlData);
 
@@ -114,6 +115,20 @@ class ScheduleJobRepository {
 
       return {success:true, jobs:jobs};
 
+    }catch(err) {
+      return {success:false, err:err.toString()};
+    }
+  }
+
+  static async updateJobAverageRunningTime(jobId, newAverageTime) {
+    try {
+      let sql = 'UPDATE schedule_job SET average_time = ? WHERE job_id = ?';
+      let sqlData = [newAverageTime, jobId];
+      let result = await MySQL.query(sql, sqlData);
+      if(result.affectedRows + '' !== '1') {
+        return {success:false, err:'update job average running time failed'};
+      }
+      return {success:true};
     }catch(err) {
       return {success:false, err:err.toString()};
     }

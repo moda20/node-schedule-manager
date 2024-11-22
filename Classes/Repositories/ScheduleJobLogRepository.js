@@ -103,6 +103,30 @@ class ScheduleJobLogRepository {
     }
   }
 
+  static async getNumberOfJobRuns(jobId) {
+    try {
+      const jobIds = Array.isArray(jobId) ? jobId : [jobId];
+
+      let sql = `SELECT job_id                     as id,
+                        SUM(1)                     as total
+                 from schedule_job_log ${jobId ? `where job_id IN (${jobIds.map(e => "\'" + e + "\'").join(',')})` : ''}
+                 group by job_id`;
+
+      if(sql === '') {
+        return {success:false, err: 'get log failed'};
+      }
+
+      let result = await MySQL.query(sql, undefined, {selectQuery: true});
+
+      return {success:true, result:result};
+
+
+    }
+    catch(err) {
+      return {success:false, err: err.toString()};
+    }
+  }
+
   static async getLatestJobError(jobId) {
     try {
 
