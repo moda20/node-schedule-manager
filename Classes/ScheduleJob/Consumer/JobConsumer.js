@@ -21,7 +21,7 @@ class JobConsumer {
     jobLog.setResult(result);
     jobLog.setError(error);
     let updateResult = await ScheduleJobLogRepository.update(jobLog);
-    let oldAverageTime = jobLog.getAverageTime();
+    let oldAverageTime = this.job?.getAverageTime();
     let numberOfRuns = (await ScheduleJobLogRepository.getNumberOfJobRuns(jobLog.getJobId()))?.result?.[0];
     if(!oldAverageTime || oldAverageTime === 0){
       const stats = (await ScheduleJobLogRepository.getLogStats(jobLog.getJobId()))?.result?.[0]
