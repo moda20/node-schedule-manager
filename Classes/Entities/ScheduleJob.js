@@ -8,7 +8,7 @@ class ScheduleJob {
     this.param = dataObj.job_param;
     this.exclusive = dataObj.exclusive;
     this.uniqueSingularId = dataObj.uniqueSingularId;
-    this.averageTime = dataObj.averageTime;
+    this.averageTime = dataObj.average_time;
   }
 
   getId() {
