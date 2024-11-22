@@ -9,7 +9,7 @@ module.exports = {
     '`consumer` varchar(1000) NOT NULL DEFAULT \'\', ' +
     '`exclusive` varchar(5) NOT NULL DEFAULT \'\', ' +
     '`status` varchar(10) NOT NULL DEFAULT \'\', ' +
-    '`average_time` int(100) NOT NULL DEFAULT \'\', ' +
+    '`average_time` float NOT NULL DEFAULT \'\', ' +
     'PRIMARY KEY (`job_id`), ' +
     'UNIQUE KEY `job_name` (`job_name`) ' +
   ') ENGINE=InnoDB DEFAULT CHARSET=utf8',
