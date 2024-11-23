@@ -127,6 +127,33 @@ class ScheduleJobLogRepository {
     }
   }
 
+  static async getLatestJobRun(inputJobIds){
+
+    try {
+      const jobIds = Array.isArray(inputJobIds) ? inputJobIds : [inputJobIds];
+
+      let sql = `
+        select *
+        from schedule_job_log
+        where job_log_id in (SELECT MAX(job_log_id) as log_id
+                             from schedule_job_log ${inputJobIds ? `where job_id IN (${jobIds.map(e => "\'" + e + "\'").join(',')})` : ''}
+                             group by job_id)`;
+
+      if(sql === '') {
+        return {success:false, err: 'get log failed'};
+      }
+
+      let result = await MySQL.query(sql, undefined, {selectQuery: true});
+
+      return {success:true, result:result};
+
+
+    }
+    catch(err) {
+      return {success:false, err: err.toString()};
+    }
+  }
+
   static async getLatestJobError(jobId) {
     try {
 
