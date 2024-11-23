@@ -61,6 +61,9 @@ class ScheduleJobManager {
   async getLogStats(jobIds) {
     return await ScheduleJobLogRepository.getLogStats(jobIds);
   }
+  async getLatestJobRun(jobIds) {
+    return await ScheduleJobLogRepository.getLatestJobRun(jobIds);
+  }
 
   async getLogErrors(jobIds) {
     return await ScheduleJobLogRepository.getLatestJobError(jobIds);
