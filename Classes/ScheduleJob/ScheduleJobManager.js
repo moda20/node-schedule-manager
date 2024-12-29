@@ -105,6 +105,11 @@ class ScheduleJobManager {
     return result;
   }
 
+  async softDeleteJob(jobId) {
+    let result = await ScheduleJobRepository.softDeleteJob(jobId);
+    return result;
+  }
+
   async getJobById(jobId) {
     let result = await ScheduleJobRepository.getJobById(jobId);
     return result;

@@ -71,6 +71,20 @@ class ScheduleJobRepository {
     }
   }
 
+  static async softDeleteJob(jobId) {
+    try {
+      let sql = 'UPDATE schedule_job SET status = "DELETED" WHERE job_id = ?';
+      let sqlData = [jobId];
+      let result = await MySQL.query(sql, sqlData);
+      if(result.affectedRows + '' !== '1') {
+        return {success:false, err: 'soft delete job failed'};
+      }
+      return {success:true};
+    }catch(err) {
+      return {success:false, err: err.toString()};
+    }
+  }
+
   static async getJobById(jobId) {
     try {
       let sql = 'SELECT * FROM schedule_job WHERE job_id = ? limit 1';
