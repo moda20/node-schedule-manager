@@ -280,9 +280,8 @@ class ScheduleJobManager {
         consumer.on(jobs[i].getName());
 
         let task = Cron.schedule(cronSetting, async () => {
-
-         return this.jobRegistration(jobId)
-    		});
+          return this.jobRegistration(jobId)
+        });
 
         this.runningJob.push({
           job: jobs[i],
