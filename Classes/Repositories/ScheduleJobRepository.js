@@ -8,13 +8,7 @@ class ScheduleJobRepository {
   static async newJob(job) {
     try {
 
-      let jobParam = '';
-      if(ScheduleJobRepository.isJSONString(job.getParam()))
-        jobParam = JSON.stringify(job.getParam());
-      else
-        jobParam = job.getParam();
-
-      let sql = 'INSERT INTO schedule_job (job_name, job_param, job_cron_setting, consumer, exclusive, status, average_time) VALUES (?,?,?,?,?,?,?)';
+      let sql = 'INSERT INTO schedule_job (job_name, job_param, job_cron_setting, consumer, exclusive, status, average_time, created_at) VALUES (?,?,?,?,?,?,?)';
       let sqlData = [
         job.getName(),
         (ScheduleJobRepository.isJSONString(job.getParam())) ? JSON.stringify(job.getParam()) : job.getParam(),
@@ -22,7 +16,8 @@ class ScheduleJobRepository {
         job.getConsumer(),
         (job.getExclusive()) ? 'true' : 'false',
         job.getStats(),
-        0
+        0,
+          job.getCreatedAt()
       ];
       let result = await MySQL.query(sql, sqlData);
 

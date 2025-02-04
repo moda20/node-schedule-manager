@@ -1,5 +1,6 @@
 class ScheduleJob {
   constructor(dataObj) {
+    this.createdAt = dataObj.created_at;
     this.id = dataObj.job_id;
     this.name = dataObj.job_name;
     this.cronSetting = dataObj.job_cron_setting;
@@ -81,6 +82,13 @@ class ScheduleJob {
 
   getUniqueSingularId(){
     return this.uniqueSingularId;
+  }
+
+  getCreatedAt(){
+    return this.createdAt;
+  }
+  setCreatedAt(createdAt){
+    this.createdAt = createdAt;
   }
 
 }
