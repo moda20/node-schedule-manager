@@ -41,6 +41,10 @@ class JobConsumer {
     }
   }
 
+  error(error) {
+    this.jobLog.logEventBus.emit('error:'+(this.job?.getUniqueSingularId() ?? this.job?.getId()), error);
+  }
+
   serializeLogs(logsData, initialLevel = 2, currentLevel = 0) {
     if(typeof logsData === "string") return logsData;
     const isLogsArray = Array.isArray(logsData);
@@ -72,7 +76,13 @@ class JobConsumer {
   preRun(job, jobLog){
     this.job = job;
     this.jobLog = jobLog;
-    this.run(job, jobLog);
+    try {
+      this.run(job, jobLog);
+    } catch (err){
+      this.logEvent(`job ${job.name} crashed with an error ${err?.message}`)
+      this.logEvent(err, (e) => this.serializeLogs(e, Infinity))
+      this.error(err);
+    }
   }
 
   async run(job, jobLog) {
