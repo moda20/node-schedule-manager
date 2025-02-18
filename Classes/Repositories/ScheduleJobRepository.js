@@ -8,7 +8,7 @@ class ScheduleJobRepository {
   static async newJob(job) {
     try {
 
-      let sql = 'INSERT INTO schedule_job (job_name, job_param, job_cron_setting, consumer, exclusive, status, average_time, created_at) VALUES (?,?,?,?,?,?,?)';
+      let sql = 'INSERT INTO schedule_job (job_name, job_param, job_cron_setting, consumer, exclusive, status, average_time, created_at) VALUES (?,?,?,?,?,?,?,?)';
       let sqlData = [
         job.getName(),
         (ScheduleJobRepository.isJSONString(job.getParam())) ? JSON.stringify(job.getParam()) : job.getParam(),
