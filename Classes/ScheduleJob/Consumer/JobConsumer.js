@@ -73,15 +73,16 @@ class JobConsumer {
     this.jobLog.logEventBus.emit('jobLog:'+(this.job?.getUniqueSingularId() ?? this.job?.getId()), serializedData)
   }
 
-  preRun(job, jobLog){
+  async preRun(job, jobLog){
     this.job = job;
     this.jobLog = jobLog;
     try {
-      this.run(job, jobLog);
+      await this.run(job, jobLog);
     } catch (err){
       this.logEvent(`job ${job.name} crashed with an error ${err?.message}`)
       this.logEvent(err, (e) => this.serializeLogs(e, Infinity))
       this.error(err);
+      await this.complete(jobLog, null, err.toString());
     }
   }
 
