@@ -10,7 +10,7 @@ module.exports = {
     '`exclusive` varchar(5) NOT NULL DEFAULT \'\', ' +
     '`status` varchar(10) NOT NULL DEFAULT \'\', ' +
     '`average_time` float NOT NULL DEFAULT \'\', ' +
-    '`create_at` DATETIME NULL DEFAULT CURRENT_TIMESTAMP, ' +
+    '`created_at` DATETIME NULL DEFAULT CURRENT_TIMESTAMP, ' +
     'PRIMARY KEY (`job_id`), ' +
     'UNIQUE KEY `job_name` (`job_name`) ' +
   ') ENGINE=InnoDB DEFAULT CHARSET=utf8',
