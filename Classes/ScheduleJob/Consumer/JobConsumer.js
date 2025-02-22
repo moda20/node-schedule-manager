@@ -51,7 +51,7 @@ class JobConsumer {
     const inputLogs = isLogsArray ? logsData?.slice(0, 10) : logsData;
     const serializedObj = isLogsArray ? [] : {};
     for (const key in inputLogs) {
-      if (inputLogs.hasOwnProperty(key)) {
+      if ((typeof inputLogs.hasOwnProperty === "function") && inputLogs.hasOwnProperty(key)) {
         const value = inputLogs[key];
 
         if (typeof value === 'object' && value !== null) {
