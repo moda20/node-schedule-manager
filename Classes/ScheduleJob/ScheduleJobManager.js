@@ -115,8 +115,8 @@ class ScheduleJobManager {
     return result;
   }
 
-  async getJobsByStatus(status) {
-    let result = await ScheduleJobRepository.getJobsByStatus(status);
+  async getJobsByStatus(status, sorting) {
+    let result = await ScheduleJobRepository.getJobsByStatus(status, sorting);
     return result;
   }
 

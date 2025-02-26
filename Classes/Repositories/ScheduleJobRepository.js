@@ -100,7 +100,7 @@ class ScheduleJobRepository {
     }
   }
 
-  static async getJobsByStatus(status) {
+  static async getJobsByStatus(status, sorting) {
     try {
       let sql = '';
       let sqlData = [status];
@@ -108,6 +108,11 @@ class ScheduleJobRepository {
         sql = "SELECT * FROM schedule_job WHERE status IN (?)";
       }else  {
         sql = 'SELECT * FROM schedule_job WHERE status = ?';
+      }
+
+      if(sorting){
+       const orderQuery = Array.isArray(sorting) ? sorting.map((e) => `${e.desc ? 'DESC' : 'ASC'} ${e.by}`).join(', ') : `${sorting.desc ? 'DESC' : 'ASC'} ${sorting.by}`
+       sql = `${sql} ORDER BY ${orderQuery};`;
       }
 
       let result = await MySQL.query(sql, sqlData, {selectQuery: true});
