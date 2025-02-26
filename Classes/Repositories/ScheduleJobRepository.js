@@ -111,7 +111,7 @@ class ScheduleJobRepository {
       }
 
       if(sorting){
-       const orderQuery = Array.isArray(sorting) ? sorting.map((e) => `${e.desc ? 'DESC' : 'ASC'} ${e.by}`).join(', ') : `${sorting.desc ? 'DESC' : 'ASC'} ${sorting.by}`
+       const orderQuery = Array.isArray(sorting) ? sorting.map((e) => `${e.by} ${e.desc ? 'DESC' : 'ASC'}`).join(', ') : `${sorting.by} ${sorting.desc ? 'DESC' : 'ASC'}`
        sql = `${sql} ORDER BY ${orderQuery};`;
       }
 
