@@ -102,18 +102,34 @@ class ScheduleJobRepository {
 
   static async getJobsByStatus(status, sorting) {
     try {
-      let sql = '';
-      let sqlData = [status];
-      if(Array.isArray(status)){
-        sql = "SELECT * FROM schedule_job WHERE status IN (?)";
-      }else  {
-        sql = 'SELECT * FROM schedule_job WHERE status = ?';
+      const whereClause = Array.isArray(status) ? `WHERE sj.status IN (?)`: ` WHERE sj.status = ?`
+      let sortClause = '';
+      if(sorting){
+        const orderQuery = Array.isArray(sorting) ? sorting.map((e) => `sj.${e.by} ${e.desc ? 'DESC' : 'ASC'}`).join(', ') : `${sj.sorting.by} ${sorting.desc ? 'DESC' : 'ASC'}`
+        sortClause = `ORDER BY ${orderQuery}`;
       }
 
-      if(sorting){
-       const orderQuery = Array.isArray(sorting) ? sorting.map((e) => `${e.by} ${e.desc ? 'DESC' : 'ASC'}`).join(', ') : `${sorting.by} ${sorting.desc ? 'DESC' : 'ASC'}`
-       sql = `${sql} ORDER BY ${orderQuery};`;
-      }
+      let sql = `
+        SELECT sj.*, sjl.*
+        FROM schedule_job sj
+               LEFT JOIN (SELECT sjl1.job_id     as \`last_run.job_id\`,
+                                 sjl1.job_log_id as \`last_run.job_log_id\`,
+                                 sjl1.machine    as \`last_run.machine\`,
+                                 sjl1.start_time as \`last_run.start_time\`,
+                                 sjl1.end_time   as \`last_run.end_time\`,
+                                 sjl1.result     as \`last_run.result\`,
+                                 sjl1.error      as \`last_run.error\`
+                          FROM schedule_job_log sjl1
+                                 JOIN (SELECT job_id, MAX(start_time) AS latest_end_time
+                                       FROM schedule_job_log
+                                       GROUP BY job_id) sjl2
+                                      ON sjl1.job_id = sjl2.job_id AND sjl1.start_time = sjl2.latest_end_time) sjl
+                         ON sj.job_id = sjl.\`last_run.job_id\`
+        ${whereClause}
+        ${sortClause}
+        ;
+      `
+      let sqlData = [status];
 
       let result = await MySQL.query(sql, sqlData, {selectQuery: true});
       let jobs = [];
@@ -123,13 +139,18 @@ class ScheduleJobRepository {
         (result[i].exclusive === 'true') ? result[i].exclusive = true : result[i].exclusive = false;
         (ScheduleJobRepository.isJSONString(result[i].job_param)) ? result[i].job_param = JSON.parse(result[i].job_param) : result[i].job_param;
 
+        result[i].latest_run = Object.fromEntries(
+            Object.keys(result[i]).filter(e => e.split('.').length > 1)
+                .map(e => [e.split('.')[1], result[i][e]])
+        )
+
         let job = new ScheduleJob(result[i]);
         jobs.push(job);
       }
 
       return {success:true, jobs:jobs};
 
-    }catch(err) {
+    } catch(err) {
       return {success:false, err:err.toString()};
     }
   }
