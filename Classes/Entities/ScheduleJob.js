@@ -10,6 +10,7 @@ class ScheduleJob {
     this.exclusive = dataObj.exclusive;
     this.uniqueSingularId = dataObj.uniqueSingularId;
     this.averageTime = dataObj.average_time;
+    this.latestRun = dataObj.latest_run;
   }
 
   getId() {
@@ -89,6 +90,13 @@ class ScheduleJob {
   }
   setCreatedAt(createdAt){
     this.createdAt = createdAt;
+  }
+
+  getLatestRun(){
+    return this.latestRun;
+  }
+  setLatestRun(latestRun){
+    this.latestRun = latestRun;
   }
 
 }
