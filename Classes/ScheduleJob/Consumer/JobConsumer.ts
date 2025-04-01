@@ -106,6 +106,18 @@ class JobConsumer {
     return serializedObj;
   }
 
+  logEvent(data: any, serializer?: (data: any) => any) {
+    const serializedData = serializer
+      ? serializer(data)
+      : this.serializeLogs(data);
+    if (this.jobLog?.logEventBus) {
+      this.jobLog.logEventBus.emit(
+        "jobLog:" + (this.job?.getUniqueSingularId() ?? this.job?.getId()),
+        serializedData,
+      );
+    }
+  }
+
   async preRun(job: IScheduleJob, jobLog: IScheduleJobLog) {
     try {
       await this.run(job, jobLog);

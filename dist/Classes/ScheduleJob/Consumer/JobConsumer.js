@@ -71,6 +71,15 @@ class JobConsumer {
         }
         return serializedObj;
     }
+    logEvent(data, serializer) {
+        var _a, _b, _c, _d;
+        const serializedData = serializer
+            ? serializer(data)
+            : this.serializeLogs(data);
+        if ((_a = this.jobLog) === null || _a === void 0 ? void 0 : _a.logEventBus) {
+            this.jobLog.logEventBus.emit("jobLog:" + ((_c = (_b = this.job) === null || _b === void 0 ? void 0 : _b.getUniqueSingularId()) !== null && _c !== void 0 ? _c : (_d = this.job) === null || _d === void 0 ? void 0 : _d.getId()), serializedData);
+        }
+    }
     preRun(job, jobLog) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
