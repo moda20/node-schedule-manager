@@ -10,7 +10,7 @@ export interface IScheduleJob {
     uniqueSingularId?: string;
     averageTime: number;
     latestRun?: any | null;
-    getId(): number;
+    getId(): number | undefined;
     getName(): string;
     getParam(): any;
     getCronSetting(): string;
@@ -58,7 +58,7 @@ export declare class ScheduleJob implements IScheduleJob {
     averageTime: number;
     latestRun?: any | null;
     constructor(dataObj: ScheduleJobTable);
-    getId(): number;
+    getId(): number | undefined;
     getName(): string;
     getParam(): any;
     getCronSetting(): string;

@@ -17,7 +17,7 @@ class ScheduleJob {
         this.latestRun = (_b = dataObj.latest_run) !== null && _b !== void 0 ? _b : null;
     }
     getId() {
-        return Number(this.id);
+        return this.id ? Number(this.id) : undefined;
     }
     getName() {
         return this.name;

@@ -13,7 +13,7 @@ export interface IScheduleJob {
   averageTime: number;
   latestRun?: any | null;
 
-  getId(): number;
+  getId(): number | undefined;
   getName(): string;
   getParam(): any; // Adjust type based on actual usage
   getCronSetting(): string;
@@ -77,7 +77,7 @@ export class ScheduleJob implements IScheduleJob {
   }
 
   getId() {
-    return Number(this.id);
+    return this.id ? Number(this.id) : undefined;
   }
 
   getName() {

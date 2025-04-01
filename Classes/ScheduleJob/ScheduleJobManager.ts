@@ -152,9 +152,9 @@ class ScheduleJobManager {
 
     try {
       let machine = address();
-      let jobLogId = job.getId();
+      let jobLogId = job.getId()!;
       let log = new ScheduleJobLog({
-        job_id: job.getId(),
+        job_id: jobLogId,
         machine,
         start_time: new Date().toString(),
         result: "",
@@ -173,10 +173,11 @@ class ScheduleJobManager {
   async startJobs(jobs: IScheduleJob[]) {
     for (const job of jobs) {
       try {
+        if (!job.getId()) continue;
         let consumer = (await import(`${path + job.getConsumer()}`)).default;
         consumer.on(job.getName());
         let task = schedule(job.getCronSetting(), async () =>
-          this.jobRegistration(job.getId()),
+          this.jobRegistration(job.getId()!),
         );
         this.runningJob.push({ job, task, consumer });
       } catch (err) {
