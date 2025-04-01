@@ -71,7 +71,7 @@ declare const _default: {
             job?: ScheduleJob;
             err?: string;
         }>;
-        getJobsByStatus(status: string, sorting?: import("./Classes/Repositories/ScheduleJobRepository.js").jobSorting): Promise<{
+        getJobsByStatus(status: string | string[], sorting?: import("./Classes/Repositories/ScheduleJobRepository.js").jobSorting): Promise<{
             success: boolean;
             jobs?: ScheduleJob[];
             err?: string;

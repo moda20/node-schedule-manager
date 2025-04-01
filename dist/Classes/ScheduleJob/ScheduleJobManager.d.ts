@@ -69,7 +69,7 @@ declare class ScheduleJobManager {
         job?: ScheduleJob;
         err?: string;
     }>;
-    getJobsByStatus(status: string, sorting?: jobSorting): Promise<{
+    getJobsByStatus(status: string | string[], sorting?: jobSorting): Promise<{
         success: boolean;
         jobs?: ScheduleJob[];
         err?: string;

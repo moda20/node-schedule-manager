@@ -114,7 +114,7 @@ class ScheduleJobManager {
     return await ScheduleJobRepository.getJobById(jobId);
   }
 
-  async getJobsByStatus(status: string, sorting?: jobSorting) {
+  async getJobsByStatus(status: string | string[], sorting?: jobSorting) {
     return await ScheduleJobRepository.getJobsByStatus(status, sorting);
   }
 
