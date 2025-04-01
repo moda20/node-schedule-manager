@@ -120,15 +120,14 @@ class JobConsumer {
 
   async preRun(job: IScheduleJob, jobLog: IScheduleJobLog) {
     try {
-      await this.run(job, jobLog);
-      return await this.complete(jobLog, "");
+      return await this.run(job, jobLog);
     } catch (err) {
       return await this.complete(jobLog, null, (err as Error).toString());
     }
   }
 
-  async run(job: IScheduleJob, jobLog: IScheduleJobLog): Promise<void> {
-    // Implementation of the run method
+  async run(job: IScheduleJob, jobLog: IScheduleJobLog) {
+    return await this.complete(jobLog, "");
   }
 }
 

@@ -30,7 +30,17 @@ declare class JobConsumer {
         success: boolean;
         err?: string;
     }>;
-    run(job: IScheduleJob, jobLog: IScheduleJobLog): Promise<void>;
+    run(job: IScheduleJob, jobLog: IScheduleJobLog): Promise<{
+        updateResult: {
+            success: boolean;
+        };
+        jobUpdateResult: {
+            success: boolean;
+        };
+    } | {
+        success: boolean;
+        err?: string;
+    }>;
 }
 export default JobConsumer;
 //# sourceMappingURL=JobConsumer.d.ts.map

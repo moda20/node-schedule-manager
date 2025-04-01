@@ -83,8 +83,7 @@ class JobConsumer {
     preRun(job, jobLog) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
-                yield this.run(job, jobLog);
-                return yield this.complete(jobLog, "");
+                return yield this.run(job, jobLog);
             }
             catch (err) {
                 return yield this.complete(jobLog, null, err.toString());
@@ -93,7 +92,7 @@ class JobConsumer {
     }
     run(job, jobLog) {
         return __awaiter(this, void 0, void 0, function* () {
-            // Implementation of the run method
+            return yield this.complete(jobLog, "");
         });
     }
 }
