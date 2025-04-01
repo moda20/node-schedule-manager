@@ -2,8 +2,11 @@ import ScheduleJobManager from "./Classes/ScheduleJob/ScheduleJobManager.js";
 import JobConsumer from "./Classes/ScheduleJob/Consumer/JobConsumer.js";
 import ScheduleJobEventBus from "./Classes/ScheduleJob/ScheduleJobEventBus";
 import ScheduleJobLogEventBus from "./Classes/ScheduleJob/ScheduleJobLogEventBus";
-import { ScheduleJob } from "./Classes/Entities/ScheduleJob";
-import { ScheduleJobLog } from "./Classes/Entities/ScheduleJobLog";
+import { ScheduleJob, IScheduleJob } from "./Classes/Entities/ScheduleJob";
+import {
+  ScheduleJobLog,
+  IScheduleJobLog,
+} from "./Classes/Entities/ScheduleJobLog";
 
 export default {
   ScheduleJobManager: ScheduleJobManager,
@@ -15,3 +18,5 @@ export default {
     ScheduleJobLog,
   },
 };
+
+export type { IScheduleJob, IScheduleJobLog };
