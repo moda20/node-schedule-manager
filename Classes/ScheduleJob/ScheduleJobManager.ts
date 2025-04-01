@@ -173,7 +173,7 @@ class ScheduleJobManager {
   async startJobs(jobs: IScheduleJob[]) {
     for (const job of jobs) {
       try {
-        let consumer = require(path + job.getConsumer());
+        let consumer = (await import(`${path + job.getConsumer()}`)).default;
         consumer.on(job.getName());
         let task = schedule(job.getCronSetting(), async () =>
           this.jobRegistration(job.getId()),
