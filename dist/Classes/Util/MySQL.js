@@ -70,7 +70,7 @@ class MySQLConnector {
         return __awaiter(this, void 0, void 0, function* () {
             try {
                 const result = yield this.execAsync((connection) => __awaiter(this, void 0, void 0, function* () {
-                    const rows = yield new Promise((resolve, reject) => {
+                    return yield new Promise((resolve, reject) => {
                         connection.query(sql, data, (err, rows) => {
                             if (err) {
                                 reject(err);
@@ -80,9 +80,8 @@ class MySQLConnector {
                             }
                         });
                     });
-                    return (opts === null || opts === void 0 ? void 0 : opts.selectQuery) ? JSON.parse(JSON.stringify(result)) : result;
                 }));
-                return result;
+                return (opts === null || opts === void 0 ? void 0 : opts.selectQuery) ? JSON.parse(JSON.stringify(result)) : result;
             }
             catch (err) {
                 const errString = `${err.toString()}\nSQL: ${sql}\nSQL Data: ${JSON.stringify(data)}`;

@@ -1,4 +1,4 @@
-import { Pool, PoolConnection, PoolConfig, createPool } from "mysql";
+import { createPool, Pool, PoolConfig, PoolConnection } from "mysql";
 
 class MySQLConnector {
   private pool: Pool | null = null;
@@ -61,7 +61,7 @@ class MySQLConnector {
   ): Promise<T> {
     try {
       const result: T = await this.execAsync(async (connection) => {
-        const rows = await new Promise<T>((resolve, reject) => {
+        return await new Promise<T>((resolve, reject) => {
           connection.query(sql, data, (err, rows) => {
             if (err) {
               reject(err);
@@ -70,9 +70,8 @@ class MySQLConnector {
             }
           });
         });
-        return opts?.selectQuery ? JSON.parse(JSON.stringify(result)) : result;
       });
-      return result;
+      return opts?.selectQuery ? JSON.parse(JSON.stringify(result)) : result;
     } catch (err) {
       const errString = `${(err as Error).toString()}\nSQL: ${sql}\nSQL Data: ${JSON.stringify(data)}`;
       throw new Error(errString);

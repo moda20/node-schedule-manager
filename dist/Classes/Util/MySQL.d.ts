@@ -1,4 +1,4 @@
-import { Pool, PoolConnection, PoolConfig } from "mysql";
+import { Pool, PoolConfig, PoolConnection } from "mysql";
 declare class MySQLConnector {
     private pool;
     setPool(pool: Pool): void;
