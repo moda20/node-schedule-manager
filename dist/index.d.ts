@@ -48,11 +48,17 @@ declare const _default: {
         }>;
         newJob(name: string, cronSetting: string, param: any, consumer: string, exclusive: boolean, status: string): Promise<{
             success: boolean;
+            job: ScheduleJob;
+            err?: undefined;
+        } | {
+            job: undefined;
+            success: boolean;
             jobId?: number;
             err?: string;
         } | {
             success: boolean;
-            job: ScheduleJob;
+            err: string;
+            job?: undefined;
         }>;
         updateJob(jobId: number, job: IScheduleJob): Promise<{
             success: boolean;
@@ -90,15 +96,8 @@ declare const _default: {
             singular?: boolean;
         }): Promise<{
             success: boolean;
-            job?: ScheduleJob;
+            uniqueSingularId?: string;
             err?: string;
-        } | {
-            success: boolean;
-            result?: any;
-            err?: string;
-        } | {
-            success: boolean;
-            uniqueSingularId: string | undefined;
         }>;
         startJobs(jobs: IScheduleJob[]): Promise<{
             success: boolean;

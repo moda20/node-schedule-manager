@@ -128,7 +128,7 @@ class ScheduleJobManager {
                     job.setId(result.jobId);
                     return { success: true, job };
                 }
-                return result;
+                return Object.assign(Object.assign({}, result), { job: undefined });
             }
             catch (err) {
                 return { success: false, err: err.toString() };

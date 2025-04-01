@@ -92,7 +92,10 @@ class ScheduleJobManager {
         job.setId(result.jobId);
         return { success: true, job };
       }
-      return result;
+      return {
+        ...result,
+        job: undefined,
+      };
     } catch (err) {
       return { success: false, err: (err as Error).toString() };
     }
@@ -145,7 +148,7 @@ class ScheduleJobManager {
   async jobRegistration(
     jobId: number,
     { singular }: { singular?: boolean } = {},
-  ) {
+  ): Promise<{ success: boolean; uniqueSingularId?: string; err?: string }> {
     let getJobResult = await ScheduleJobRepository.getJobById(jobId);
     if (!getJobResult.success) return getJobResult;
     let job = getJobResult.job!;
