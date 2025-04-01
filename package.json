@@ -1,26 +1,36 @@
 {
   "name": "schedule-manager",
-  "version": "1.0.0",
-  "description": "A simple node schedule job manager for distributed system",
+  "version": "1.1.0",
+  "description": "A simple node schedule job manager for distributed system, now in Typescript",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "build": "tsc",
+    "prepare": "npm run build"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/crazysumsum/node-schedule-manager.git"
+    "url": "git+https://github.com/moda20/node-schedule-manager.git"
   },
-  "author": "Sam Wong",
+  "author": "Sam Wong & Moda20",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/crazysumsum/node-schedule-manager/issues"
+    "url": "https://github.com/moda20/node-schedule-manager/issues"
   },
-  "homepage": "https://github.com/crazysumsum/node-schedule-manager#readme",
+  "homepage": "https://github.com/moda20/node-schedule-manager#readme",
   "dependencies": {
     "app-root-path": "^3.0.0",
     "ip": "^1.1.5",
     "moment": "^2.29.1",
     "mysql": "^2.18.1",
     "node-cron": "^3.0.0"
+  },
+  "devDependencies": {
+    "@types/app-root-path": "^1.2.8",
+    "@types/ip": "^1.1.3",
+    "@types/mysql": "^2.15.27",
+    "@types/node": "^22.13.17",
+    "@types/node-cron": "^3.0.11",
+    "prettier": "^3.5.3",
+    "typescript": "^5.8.2"
   }
 }

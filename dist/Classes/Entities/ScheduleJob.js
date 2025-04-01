@@ -4,6 +4,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.ScheduleJob = void 0;
 class ScheduleJob {
     constructor(dataObj) {
+        var _a, _b;
         this.createdAt = dataObj.created_at;
         this.id = dataObj.job_id;
         this.name = dataObj.job_name;
@@ -12,9 +13,8 @@ class ScheduleJob {
         this.status = dataObj.status;
         this.param = dataObj.job_param;
         this.exclusive = dataObj.exclusive;
-        this.uniqueSingularId = dataObj.uniqueSingularId;
-        this.averageTime = dataObj.average_time;
-        this.latestRun = dataObj.latest_run;
+        this.averageTime = (_a = dataObj.average_time) !== null && _a !== void 0 ? _a : 0;
+        this.latestRun = (_b = dataObj.latest_run) !== null && _b !== void 0 ? _b : null;
     }
     getId() {
         return Number(this.id);

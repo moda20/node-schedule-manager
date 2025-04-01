@@ -1,37 +1,4 @@
 "use strict";
-var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
-    if (k2 === undefined) k2 = k;
-    var desc = Object.getOwnPropertyDescriptor(m, k);
-    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
-      desc = { enumerable: true, get: function() { return m[k]; } };
-    }
-    Object.defineProperty(o, k2, desc);
-}) : (function(o, m, k, k2) {
-    if (k2 === undefined) k2 = k;
-    o[k2] = m[k];
-}));
-var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
-    Object.defineProperty(o, "default", { enumerable: true, value: v });
-}) : function(o, v) {
-    o["default"] = v;
-});
-var __importStar = (this && this.__importStar) || (function () {
-    var ownKeys = function(o) {
-        ownKeys = Object.getOwnPropertyNames || function (o) {
-            var ar = [];
-            for (var k in o) if (Object.prototype.hasOwnProperty.call(o, k)) ar[ar.length] = k;
-            return ar;
-        };
-        return ownKeys(o);
-    };
-    return function (mod) {
-        if (mod && mod.__esModule) return mod;
-        var result = {};
-        if (mod != null) for (var k = ownKeys(mod), i = 0; i < k.length; i++) if (k[i] !== "default") __createBinding(result, mod, k[i]);
-        __setModuleDefault(result, mod);
-        return result;
-    };
-})();
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
@@ -45,7 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const Moment = __importStar(require("moment"));
+const moment_1 = __importDefault(require("moment"));
 const ScheduleJobLogRepository_1 = require("../../Repositories/ScheduleJobLogRepository");
 const ScheduleJobRepository_1 = require("../../Repositories/ScheduleJobRepository");
 const ScheduleJobEventBus_1 = __importDefault(require("../ScheduleJobEventBus"));
@@ -59,7 +26,7 @@ class JobConsumer {
     complete(jobLog, result, error) {
         return __awaiter(this, void 0, void 0, function* () {
             var _a, _b, _c, _d, _e, _f, _g;
-            jobLog.setEndTime(Moment().format("YYYY-MM-DD HH:mm:ss"));
+            jobLog.setEndTime((0, moment_1.default)().format("YYYY-MM-DD HH:mm:ss"));
             jobLog.setResult(result);
             jobLog.setError(error);
             const updateResult = yield ScheduleJobLogRepository_1.ScheduleJobLogRepository.update(jobLog);
@@ -69,7 +36,7 @@ class JobConsumer {
                 const stats = (_f = (_e = (yield ScheduleJobLogRepository_1.ScheduleJobLogRepository.getLogStats(jobLog.getJobId()))) === null || _e === void 0 ? void 0 : _e.result) === null || _f === void 0 ? void 0 : _f[0];
                 oldAverageTime = stats.avgTime;
             }
-            const newTimeInSeconds = Moment(jobLog.getEndTime()).diff(Moment(jobLog.getStartTime()), "seconds");
+            const newTimeInSeconds = (0, moment_1.default)(jobLog.getEndTime()).diff((0, moment_1.default)(jobLog.getStartTime()), "seconds");
             const newAverageTime = oldAverageTime + (newTimeInSeconds - oldAverageTime) / numberOfRuns;
             const jobUpdateResult = yield ScheduleJobRepository_1.ScheduleJobRepository.updateJobAverageRunningTime(jobLog.getJobId(), newAverageTime);
             if (!updateResult.success || !jobUpdateResult.success) {
@@ -108,7 +75,7 @@ class JobConsumer {
         return __awaiter(this, void 0, void 0, function* () {
             try {
                 yield this.run(job, jobLog);
-                return yield this.complete(jobLog, "", null);
+                return yield this.complete(jobLog, "");
             }
             catch (err) {
                 return yield this.complete(jobLog, null, err.toString());

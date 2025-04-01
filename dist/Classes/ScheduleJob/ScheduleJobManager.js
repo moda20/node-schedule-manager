@@ -83,7 +83,6 @@ class ScheduleJobManager {
         return __awaiter(this, void 0, void 0, function* () {
             try {
                 let job = new ScheduleJob_1.ScheduleJob({
-                    job_id: "",
                     job_name: name,
                     job_param: param,
                     job_cron_setting: cronSetting,
@@ -161,11 +160,9 @@ class ScheduleJobManager {
                 let machine = (0, ip_1.address)();
                 let jobLogId = job.getId();
                 let log = new ScheduleJobLog_1.ScheduleJobLog({
-                    job_log_id: jobLogId,
                     job_id: job.getId(),
                     machine,
-                    start_time: new Date(),
-                    end_time: null,
+                    start_time: new Date().toString(),
                     result: "",
                     logEventBus: ScheduleJobLogEventBus_1.default,
                 });

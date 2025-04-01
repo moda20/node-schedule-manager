@@ -59,7 +59,7 @@ class ScheduleJobLogRepository {
                              FROM schedule_job_log ${jobIds ? `WHERE job_id IN (${jobIds.map((e) => "\'" + e + "\'").join(",")})` : ""}
                              GROUP BY job_id)
       `;
-                const result = yield MySQL_1.default.query(sql, undefined);
+                const result = yield MySQL_1.default.query(sql, []);
                 return { success: true, result };
             }
             catch (err) {
@@ -94,7 +94,7 @@ class ScheduleJobLogRepository {
         FROM schedule_job_log ${jobIds ? `WHERE job_id IN (${jobIds.map((e) => "\'" + e + "\'").join(",")})` : ""}
         GROUP BY job_id
       `;
-                const result = yield MySQL_1.default.query(sql, undefined);
+                const result = yield MySQL_1.default.query(sql, []);
                 return { success: true, result };
             }
             catch (err) {
@@ -112,7 +112,7 @@ class ScheduleJobLogRepository {
         FROM schedule_job_log ${jobIds ? `WHERE job_id IN (${jobIds.map((e) => "\'" + e + "\'").join(",")})` : ""}
         GROUP BY job_id
       `;
-                const result = yield MySQL_1.default.query(sql, undefined);
+                const result = yield MySQL_1.default.query(sql, []);
                 return { success: true, result };
             }
             catch (err) {
@@ -132,7 +132,7 @@ class ScheduleJobLogRepository {
         ORDER BY sjl.end_time DESC
         LIMIT 1
       `;
-                const result = yield MySQL_1.default.query(sql, undefined);
+                const result = yield MySQL_1.default.query(sql, []);
                 return { success: true, result };
             }
             catch (err) {

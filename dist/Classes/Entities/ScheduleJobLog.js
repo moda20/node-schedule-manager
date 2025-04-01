@@ -1,7 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.ScheduleJobLog = void 0;
-// ScheduleJobLog.ts
 class ScheduleJobLog {
     constructor(dataObj) {
         this.id = dataObj.job_log_id;

@@ -1,0 +1,123 @@
+import Moment from "moment";
+import { ScheduleJobLogRepository } from "../../Repositories/ScheduleJobLogRepository";
+import { ScheduleJobRepository } from "../../Repositories/ScheduleJobRepository";
+import ScheduleJobEventBus from "../ScheduleJobEventBus";
+import { IScheduleJobLog } from "../../Entities/ScheduleJobLog";
+import { IScheduleJob } from "../../Entities/ScheduleJob";
+
+class JobConsumer {
+  job?: IScheduleJob;
+  jobLog?: IScheduleJobLog;
+
+  on(jobName: string) {
+    ScheduleJobEventBus.on(
+      "scheduleJob:" + jobName,
+      (...args: [IScheduleJob, IScheduleJobLog]) => this.preRun(...args),
+    );
+  }
+
+  off(jobName: string) {
+    ScheduleJobEventBus.off(
+      "scheduleJob:" + jobName,
+      (...args: [IScheduleJob, IScheduleJobLog]) => this.preRun(...args),
+    );
+  }
+
+  async complete(
+    jobLog: IScheduleJobLog,
+    result: any,
+    error?: string,
+  ): Promise<
+    | {
+        updateResult: { success: boolean };
+        jobUpdateResult: { success: boolean };
+      }
+    | { success: boolean; err?: string }
+  > {
+    jobLog.setEndTime(Moment().format("YYYY-MM-DD HH:mm:ss"));
+    jobLog.setResult(result);
+    jobLog.setError(error);
+
+    const updateResult = await ScheduleJobLogRepository.update(jobLog);
+    let oldAverageTime = this.job?.getAverageTime() || 0;
+    const numberOfRuns = (
+      await ScheduleJobLogRepository.getNumberOfJobRuns(jobLog.getJobId())
+    )?.result?.[0]?.total;
+
+    if (!oldAverageTime) {
+      const stats = (
+        await ScheduleJobLogRepository.getLogStats(jobLog.getJobId())
+      )?.result?.[0];
+      oldAverageTime = stats.avgTime;
+    }
+
+    const newTimeInSeconds = Moment(jobLog.getEndTime()).diff(
+      Moment(jobLog.getStartTime()),
+      "seconds",
+    );
+    const newAverageTime =
+      oldAverageTime + (newTimeInSeconds - oldAverageTime) / numberOfRuns;
+    const jobUpdateResult =
+      await ScheduleJobRepository.updateJobAverageRunningTime(
+        jobLog.getJobId(),
+        newAverageTime,
+      );
+
+    if (!updateResult.success || !jobUpdateResult.success) {
+      return { updateResult, jobUpdateResult };
+    } else {
+      ScheduleJobEventBus.emit("completed:" + this.job?.getName(), this.job);
+      return { success: true };
+    }
+  }
+
+  error(error: Error) {
+    this.jobLog?.logEventBus.emit(
+      "error:" + (this.job?.getUniqueSingularId() ?? this.job?.getId()),
+      error,
+    );
+  }
+
+  serializeLogs(
+    logsData: any,
+    initialLevel: number = 2,
+    currentLevel: number = 0,
+  ): any {
+    if (typeof logsData === "string") return logsData;
+    const isLogsArray = Array.isArray(logsData);
+    const inputLogs = isLogsArray ? logsData.slice(0, 10) : logsData;
+    const serializedObj: { [key: string]: any } = isLogsArray ? [] : {};
+
+    for (const key in inputLogs) {
+      if (inputLogs.hasOwnProperty(key)) {
+        const value = inputLogs[key];
+        if (currentLevel < initialLevel) {
+          serializedObj[key] = this.serializeLogs(
+            value,
+            initialLevel,
+            currentLevel + 1,
+          );
+        } else {
+          serializedObj[key] = value;
+        }
+      }
+    }
+
+    return serializedObj;
+  }
+
+  async preRun(job: IScheduleJob, jobLog: IScheduleJobLog) {
+    try {
+      await this.run(job, jobLog);
+      return await this.complete(jobLog, "");
+    } catch (err) {
+      return await this.complete(jobLog, null, (err as Error).toString());
+    }
+  }
+
+  async run(job: IScheduleJob, jobLog: IScheduleJobLog): Promise<void> {
+    // Implementation of the run method
+  }
+}
+
+export default JobConsumer;

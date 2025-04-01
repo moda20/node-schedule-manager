@@ -1,7 +1,5 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
 const InitSQL = {
-    createScheduleJobTable: `
+  createScheduleJobTable: `
     CREATE TABLE IF NOT EXISTS schedule_job (
       job_id INT(100) NOT NULL AUTO_INCREMENT,
       job_name VARCHAR(200) NOT NULL DEFAULT '',
@@ -16,7 +14,8 @@ const InitSQL = {
       UNIQUE KEY job_name (job_name)
     ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
   `,
-    createScheduleJobLogTable: `
+
+  createScheduleJobLogTable: `
     CREATE TABLE IF NOT EXISTS schedule_job_log (
       job_log_id VARCHAR(100) NOT NULL,
       job_id INT(100) NOT NULL,
@@ -30,5 +29,5 @@ const InitSQL = {
     ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
   `,
 };
-exports.default = InitSQL;
-//# sourceMappingURL=init_sql.js.map
+
+export default InitSQL;
