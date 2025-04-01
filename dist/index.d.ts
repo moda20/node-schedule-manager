@@ -1,10 +1,10 @@
 import JobConsumer from "./Classes/ScheduleJob/Consumer/JobConsumer.js";
-import { ScheduleJob } from "./Classes/Entities/ScheduleJob";
-import { ScheduleJobLog } from "./Classes/Entities/ScheduleJobLog";
+import { ScheduleJob, IScheduleJob } from "./Classes/Entities/ScheduleJob";
+import { ScheduleJobLog, IScheduleJobLog } from "./Classes/Entities/ScheduleJobLog";
 declare const _default: {
     ScheduleJobManager: {
         runningJob: {
-            job: import("./Classes/Entities/ScheduleJob").IScheduleJob;
+            job: IScheduleJob;
             task: import("node-cron").ScheduledTask;
             consumer: any;
         }[];
@@ -51,7 +51,7 @@ declare const _default: {
             success: boolean;
             job: ScheduleJob;
         }>;
-        updateJob(jobId: number, job: import("./Classes/Entities/ScheduleJob").IScheduleJob): Promise<{
+        updateJob(jobId: number, job: IScheduleJob): Promise<{
             success: boolean;
             err?: string;
         }>;
@@ -73,7 +73,7 @@ declare const _default: {
             jobs?: ScheduleJob[];
             err?: string;
         }>;
-        getRunningJobs(): import("./Classes/Entities/ScheduleJob").IScheduleJob[];
+        getRunningJobs(): IScheduleJob[];
         startJobById(jobId: number): Promise<{
             success: boolean;
             job?: ScheduleJob;
@@ -97,7 +97,7 @@ declare const _default: {
             success: boolean;
             uniqueSingularId: string | undefined;
         }>;
-        startJobs(jobs: import("./Classes/Entities/ScheduleJob").IScheduleJob[]): Promise<{
+        startJobs(jobs: IScheduleJob[]): Promise<{
             success: boolean;
             err: string;
         } | {
@@ -115,4 +115,5 @@ declare const _default: {
     };
 };
 export default _default;
+export type { IScheduleJob, IScheduleJobLog };
 //# sourceMappingURL=index.d.ts.map
