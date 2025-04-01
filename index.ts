@@ -19,4 +19,12 @@ export default {
   },
 };
 
+export {
+  ScheduleJobManager,
+  ScheduleJobLogEventBus,
+  JobConsumer,
+  ScheduleJobEventBus,
+};
+export const Entities = { ScheduleJob, ScheduleJobLog };
+
 export type { IScheduleJob, IScheduleJobLog };
