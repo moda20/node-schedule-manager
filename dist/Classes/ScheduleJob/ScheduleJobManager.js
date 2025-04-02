@@ -302,7 +302,7 @@ class ScheduleJobManager {
                 }
                 let log = new ScheduleJobLog_1.ScheduleJobLog({
                     job_log_id: jobLogId,
-                    job_id: Number(jobLogId),
+                    job_id: job.getId(),
                     machine,
                     start_time: new Date().toString(),
                     result: "",
