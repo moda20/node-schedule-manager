@@ -273,7 +273,25 @@ class ScheduleJobManager {
       let newLogResult = await ScheduleJobLogRepository.newLog(log);
       if (!newLogResult.success) return newLogResult;
 
+      if (singular) {
+        if (!this.isRunningJob(job.getId()!)) {
+          let consumer = (await import(`${path + job.getConsumer()}`)).default;
+          consumer.on(job.getName());
+        }
+        job.setUniqueSingularId(jobLogId);
+      }
+
       ScheduleJobEventBus.emit(`scheduleJob:${job.getName()}`, job, log);
+
+      if (singular) {
+        ScheduleJobEventBus.once("complete:" + job.getName(), () => {
+          if (!this.isRunningJob(job.getId()!)) {
+            let consumer = require(AppRoot + job.getConsumer());
+            consumer.off(job.getName());
+          }
+        });
+      }
+
       return { success: true, uniqueSingularId: job.getUniqueSingularId() };
     } catch (err) {
       return { success: false, err: (err as Error).toString() };
