@@ -56,6 +56,7 @@ const ScheduleJobLogRepository_1 = require("../Repositories/ScheduleJobLogReposi
 const ScheduleJobEventBus_1 = __importDefault(require("./ScheduleJobEventBus"));
 const ScheduleJobLogEventBus_1 = __importDefault(require("./ScheduleJobLogEventBus"));
 const init_sql_1 = __importDefault(require("../../init_sql"));
+const moment_1 = __importDefault(require("moment/moment"));
 class ScheduleJobManager {
     constructor() {
         this.runningJob = [];
@@ -185,15 +186,123 @@ class ScheduleJobManager {
     }
     jobRegistration(jobId_1) {
         return __awaiter(this, arguments, void 0, function* (jobId, { singular } = {}) {
+            var _a;
             let getJobResult = yield ScheduleJobRepository_1.ScheduleJobRepository.getJobById(jobId);
             if (!getJobResult.success)
                 return getJobResult;
             let job = getJobResult.job;
+            /*  async jobRegistration(jobId, {singular} = {}){
+              //reload the job entity in case any param update;
+              let getJobResult = await ScheduleJobRepository.getJobById(jobId);
+        
+              if(!getJobResult.success) {
+                return getJobResult;
+              }
+        
+              let job = getJobResult.job;
+        
+              try {
+                let machine = IP.address();
+                let jobLogId = job.getId();
+                let cronSettingArr = job.getCronSetting().split(' ');
+        
+                //joblogid is a primary key in database;
+                if(cronSettingArr.length >= 6) {
+                  jobLogId = jobLogId + '-' + Moment().format('YYYYMMDDHHmmss');
+                }else if(cronSettingArr[0] !== '*') {
+                  jobLogId = jobLogId + '-' + Moment().format('YYYYMMDDHHmm');
+                }else if(cronSettingArr[1] !== '*') {
+                  jobLogId = jobLogId + '-' + Moment().format('YYYYMMDDHH');
+                }else if(cronSettingArr[2] !== '*') {
+                  jobLogId = jobLogId + '-' + Moment().format('YYYYMMDD');
+                }else if(cronSettingArr[3] !== '*') {
+                  jobLogId = jobLogId + '-' + Moment().format('YYYYMM');
+                }else if(cronSettingArr[4] !== '*') {
+                  jobLogId = jobLogId + '-' + Moment().format('YYYYMMDDE');
+                }
+                if(singular){
+                  jobLogId = jobLogId + '-singular-' + Math.floor(Math.random() * 100000)
+                }
+        
+        
+                //if not exclusive job, add ip address as part of joblogid to prevent duplicate key;
+                if(!job.getExclusive()) {
+                  jobLogId = jobLogId + '-' + machine;
+                }
+        
+                let log = new ScheduleJobLog({
+                  job_log_id: jobLogId,
+                  job_id: job.getId(),
+                  machine: machine,
+                  start_time: Moment().format('YYYY-MM-DD HH:mm:ss'),
+                  end_time: null,
+                  result: '',
+                  logEventBus: ScheduleJobLogEventBus
+                });
+        
+                let newLogResult = await ScheduleJobLogRepository.newLog(log);
+                if(!newLogResult.success)
+                  return newLogResult;
+        
+                if(singular){
+                  if(!this.isRunningJob(job.getId())){
+                    let consumer = require(AppRoot + job.getConsumer());
+                    consumer.on(job.getName());
+                  }
+                  job.setUniqueSingularId(jobLogId);
+                }
+        
+                //emit job event;
+                ScheduleJobEventBus.emit('scheduleJob:' + job.getName(), job, log);
+        
+                if(singular){
+                  ScheduleJobEventBus.on('complete:'+job.getName(), ()=>{
+                    if(!this.isRunningJob(job.getId())){
+                      let consumer = require(AppRoot + job.getConsumer());
+                      consumer.off(job.getName());
+                    }
+                    ScheduleJobEventBus.off('complete:'+job.getName());
+                  })
+                }
+                return {success:true, uniqueSingularId: job.getUniqueSingularId()};
+        
+              }catch(err) {
+                return {success: false, err:err.toString()};
+              }
+            }*/
             try {
                 let machine = (0, ip_1.address)();
-                let jobLogId = job.getId();
+                let jobLogId = (_a = job.getId()) === null || _a === void 0 ? void 0 : _a.toString();
+                let cronSettingArr = job.getCronSetting().split(" ");
+                //joblogid is a primary key in database;
+                if (cronSettingArr.length >= 6) {
+                    jobLogId = jobLogId + "-" + (0, moment_1.default)().format("YYYYMMDDHHmmss");
+                }
+                else if (cronSettingArr[0] !== "*") {
+                    jobLogId = jobLogId + "-" + (0, moment_1.default)().format("YYYYMMDDHHmm");
+                }
+                else if (cronSettingArr[1] !== "*") {
+                    jobLogId = jobLogId + "-" + (0, moment_1.default)().format("YYYYMMDDHH");
+                }
+                else if (cronSettingArr[2] !== "*") {
+                    jobLogId = jobLogId + "-" + (0, moment_1.default)().format("YYYYMMDD");
+                }
+                else if (cronSettingArr[3] !== "*") {
+                    jobLogId = jobLogId + "-" + (0, moment_1.default)().format("YYYYMM");
+                }
+                else if (cronSettingArr[4] !== "*") {
+                    jobLogId = jobLogId + "-" + (0, moment_1.default)().format("YYYYMMDDE");
+                }
+                if (singular) {
+                    jobLogId = jobLogId + "-singular-" + Math.floor(Math.random() * 100000);
+                }
+                //if not exclusive job, add ip address as part of joblogid to prevent duplicate key;
+                if (!job.getExclusive()) {
+                    jobLogId = jobLogId + "-" + machine;
+                }
                 let log = new ScheduleJobLog_1.ScheduleJobLog({
-                    job_id: jobLogId,
+                    job_log_id: jobLogId,
+                    job_id: Number(jobLogId),
                     machine,
                     start_time: new Date().toString(),
                     result: "",
