@@ -21,8 +21,9 @@ class ScheduleJobLogRepository {
     static newLog(log) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
-                const sql = "INSERT INTO schedule_job_log (job_id, start_time, end_time, error) VALUES (?, ?, ?, ?)";
+                const sql = "INSERT INTO schedule_job_log (job_log_id, job_id, start_time, end_time, error) VALUES (?, ?, ?, ?, ?)";
                 const result = yield MySQL_1.default.query(sql, [
+                    log.id,
                     log.jobId,
                     log.startTime,
                     log.endTime,

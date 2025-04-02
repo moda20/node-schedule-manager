@@ -15,8 +15,9 @@ export class ScheduleJobLogRepository {
   ): Promise<{ success: boolean; result?: any; err?: string }> {
     try {
       const sql =
-        "INSERT INTO schedule_job_log (job_id, start_time, end_time, error) VALUES (?, ?, ?, ?)";
+        "INSERT INTO schedule_job_log (job_log_id, job_id, start_time, end_time, error) VALUES (?, ?, ?, ?, ?)";
       const result = await MySQL.query(sql, [
+        log.id,
         log.jobId,
         log.startTime,
         log.endTime,
