@@ -16,12 +16,13 @@ import InitSQL from "../../init_sql";
 
 import { IScheduleJob } from "../Entities/ScheduleJob";
 import Moment from "moment/moment";
+import JobConsumer from "./Consumer/JobConsumer";
 
 class ScheduleJobManager {
   runningJob: {
     job: IScheduleJob;
     task: ScheduledTask;
-    consumer: any;
+    consumer: JobConsumer;
   }[] = [];
 
   async initWithConnPool(pool: any): Promise<any> {

@@ -9,7 +9,7 @@ declare const _default: {
         runningJob: {
             job: IScheduleJob;
             task: import("node-cron").ScheduledTask;
-            consumer: any;
+            consumer: JobConsumer;
         }[];
         initWithConnPool(pool: any): Promise<any>;
         initWithMySQLConfig(config: any): Promise<any>;

@@ -10,7 +10,7 @@ const InitSQL = {
       consumer VARCHAR(1000) NOT NULL DEFAULT '',
       exclusive VARCHAR(5) NOT NULL DEFAULT '',
       status VARCHAR(10) NOT NULL DEFAULT '',
-      average_time FLOAT NOT NULL DEFAULT '',
+      average_time FLOAT NOT NULL DEFAULT 0,
       created_at DATETIME NULL DEFAULT CURRENT_TIMESTAMP,
       PRIMARY KEY (job_id),
       UNIQUE KEY job_name (job_name)
