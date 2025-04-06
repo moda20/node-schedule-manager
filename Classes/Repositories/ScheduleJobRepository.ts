@@ -128,7 +128,7 @@ export class ScheduleJobRepository {
         ${sortClause}
         ;
       `;
-      let sqlData = Array.isArray(status) ? status : [status];
+      let sqlData = [status];
 
       const result = await MySQL.query(sql, sqlData);
       let jobs: ScheduleJob[] = [];

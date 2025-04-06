@@ -126,7 +126,7 @@ class ScheduleJobRepository {
         ${sortClause}
         ;
       `;
-                let sqlData = Array.isArray(status) ? status : [status];
+                let sqlData = [status];
                 const result = yield MySQL_1.default.query(sql, sqlData);
                 let jobs = [];
                 for (let i = 0; i < result.length; i++) {
