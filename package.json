@@ -2,6 +2,7 @@
   "name": "schedule-manager",
   "version": "1.1.0",
   "description": "A simple node schedule job manager for distributed system, now in Typescript",
+  "type": "module",
   "main": "dist/index.js",
   "module": "dist/index.js",
   "types": "dist/index.d.ts",
