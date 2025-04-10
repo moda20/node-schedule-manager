@@ -89,7 +89,10 @@ declare const _default: {
             err?: string;
         } | {
             success: boolean;
-            err: string;
+            err: {
+                err: string;
+                stack: string | undefined;
+            };
         }>;
         stopJobById(jobId: number): boolean;
         jobRegistration(jobId: number, { singular }?: {
@@ -101,7 +104,10 @@ declare const _default: {
         }>;
         startJobs(jobs: IScheduleJob[]): Promise<{
             success: boolean;
-            err: string;
+            err: {
+                err: string;
+                stack: string | undefined;
+            };
         } | {
             success: boolean;
             err?: undefined;
