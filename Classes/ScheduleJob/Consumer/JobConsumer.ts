@@ -102,7 +102,7 @@ class JobConsumer {
               currentLevel + 1,
             );
           } else {
-            serializedObj[key] = value;
+            serializedObj[key] = `[${typeof value}]`;
           }
         } else {
           serializedObj[key] = value;

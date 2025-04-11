@@ -67,7 +67,7 @@ class JobConsumer {
                         serializedObj[key] = this.serializeLogs(value, initialLevel, currentLevel + 1);
                     }
                     else {
-                        serializedObj[key] = value;
+                        serializedObj[key] = `[${typeof value}]`;
                     }
                 }
                 else {
