@@ -59,10 +59,16 @@ class JobConsumer {
         const inputLogs = isLogsArray ? logsData.slice(0, 10) : logsData;
         const serializedObj = isLogsArray ? [] : {};
         for (const key in inputLogs) {
-            if (inputLogs.hasOwnProperty(key)) {
+            if (typeof inputLogs.hasOwnProperty === "function" &&
+                inputLogs.hasOwnProperty(key)) {
                 const value = inputLogs[key];
-                if (currentLevel < initialLevel) {
-                    serializedObj[key] = this.serializeLogs(value, initialLevel, currentLevel + 1);
+                if (typeof value === "object" && value !== null) {
+                    if (currentLevel < initialLevel) {
+                        serializedObj[key] = this.serializeLogs(value, initialLevel, currentLevel + 1);
+                    }
+                    else {
+                        serializedObj[key] = value;
+                    }
                 }
                 else {
                     serializedObj[key] = value;
