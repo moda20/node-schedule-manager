@@ -346,7 +346,13 @@ class ScheduleJobManager {
                     this.runningJob.push({ job, task, consumer });
                 }
                 catch (err) {
-                    return { success: false, err: err.toString() };
+                    return {
+                        success: false,
+                        err: {
+                            err: err.toString(),
+                            stack: err === null || err === void 0 ? void 0 : err.stack,
+                        },
+                    };
                 }
             }
             return { success: true };

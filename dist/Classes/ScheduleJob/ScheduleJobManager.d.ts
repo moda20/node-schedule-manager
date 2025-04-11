@@ -88,7 +88,10 @@ declare class ScheduleJobManager {
         err?: string;
     } | {
         success: boolean;
-        err: string;
+        err: {
+            err: string;
+            stack: string | undefined;
+        };
     }>;
     stopJobById(jobId: number): boolean;
     jobRegistration(jobId: number, { singular }?: {
@@ -100,7 +103,10 @@ declare class ScheduleJobManager {
     }>;
     startJobs(jobs: IScheduleJob[]): Promise<{
         success: boolean;
-        err: string;
+        err: {
+            err: string;
+            stack: string | undefined;
+        };
     } | {
         success: boolean;
         err?: undefined;
