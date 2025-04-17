@@ -32,6 +32,7 @@ export interface IScheduleJob {
     setCreatedAt(createdAt: Date): void;
     getLatestRun(): Date | null;
     setLatestRun(latestRun: Date | null): void;
+    getJobUpdateObject(): ScheduleJobTable;
 }
 export interface ScheduleJobTable {
     job_name: string;
@@ -58,6 +59,17 @@ export declare class ScheduleJob implements IScheduleJob {
     averageTime: number;
     latestRun?: any | null;
     constructor(dataObj: ScheduleJobTable);
+    getJobUpdateObject(): {
+        job_id: number | undefined;
+        job_name: string;
+        job_cron_setting: string;
+        consumer: string;
+        status: string;
+        job_param: any;
+        exclusive: boolean;
+        average_time: number;
+        latest_run: any;
+    };
     getId(): number | undefined;
     getName(): string;
     getParam(): any;

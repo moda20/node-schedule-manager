@@ -16,6 +16,19 @@ class ScheduleJob {
         this.averageTime = (_a = dataObj.average_time) !== null && _a !== void 0 ? _a : 0;
         this.latestRun = (_b = dataObj.latest_run) !== null && _b !== void 0 ? _b : null;
     }
+    getJobUpdateObject() {
+        return {
+            job_id: this.id,
+            job_name: this.name,
+            job_cron_setting: this.cronSetting,
+            consumer: this.consumer,
+            status: this.status,
+            job_param: this.param,
+            exclusive: this.exclusive,
+            average_time: this.averageTime,
+            latest_run: this.latestRun,
+        };
+    }
     getId() {
         return this.id ? Number(this.id) : undefined;
     }

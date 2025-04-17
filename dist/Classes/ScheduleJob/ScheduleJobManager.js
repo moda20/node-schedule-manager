@@ -138,7 +138,7 @@ class ScheduleJobManager {
     }
     updateJob(jobId, job) {
         return __awaiter(this, void 0, void 0, function* () {
-            return yield ScheduleJobRepository_1.ScheduleJobRepository.updateJob(jobId, job);
+            return yield ScheduleJobRepository_1.ScheduleJobRepository.updateJob(jobId, job.getJobUpdateObject());
         });
     }
     deleteJob(jobId) {
