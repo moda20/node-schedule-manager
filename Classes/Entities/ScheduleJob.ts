@@ -35,6 +35,7 @@ export interface IScheduleJob {
   setCreatedAt(createdAt: Date): void;
   getLatestRun(): Date | null;
   setLatestRun(latestRun: Date | null): void;
+  getJobUpdateObject(): ScheduleJobTable;
 }
 
 export interface ScheduleJobTable {
@@ -74,6 +75,20 @@ export class ScheduleJob implements IScheduleJob {
     this.exclusive = dataObj.exclusive;
     this.averageTime = dataObj.average_time ?? 0;
     this.latestRun = dataObj.latest_run ?? null;
+  }
+
+  getJobUpdateObject() {
+    return {
+      job_id: this.id,
+      job_name: this.name,
+      job_cron_setting: this.cronSetting,
+      consumer: this.consumer,
+      status: this.status,
+      job_param: this.param,
+      exclusive: this.exclusive,
+      average_time: this.averageTime,
+      latest_run: this.latestRun,
+    };
   }
 
   getId() {

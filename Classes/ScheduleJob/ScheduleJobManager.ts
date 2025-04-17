@@ -104,7 +104,10 @@ class ScheduleJobManager {
   }
 
   async updateJob(jobId: number, job: IScheduleJob) {
-    return await ScheduleJobRepository.updateJob(jobId, job);
+    return await ScheduleJobRepository.updateJob(
+      jobId,
+      job.getJobUpdateObject(),
+    );
   }
 
   async deleteJob(jobId: number) {

@@ -1,6 +1,10 @@
 // ScheduleJobRepository.ts
 import MySQL from "../Util/MySQL";
-import { ScheduleJob, IScheduleJob } from "../Entities/ScheduleJob";
+import {
+  ScheduleJob,
+  IScheduleJob,
+  ScheduleJobTable,
+} from "../Entities/ScheduleJob";
 
 export interface jobSorting {
   by: string;
