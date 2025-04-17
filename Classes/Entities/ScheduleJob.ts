@@ -79,15 +79,12 @@ export class ScheduleJob implements IScheduleJob {
 
   getJobUpdateObject() {
     return {
-      job_id: this.id,
       job_name: this.name,
       job_cron_setting: this.cronSetting,
       consumer: this.consumer,
       status: this.status,
       job_param: this.param,
       exclusive: this.exclusive,
-      average_time: this.averageTime,
-      latest_run: this.latestRun,
     };
   }
 

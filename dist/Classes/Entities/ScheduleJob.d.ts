@@ -60,15 +60,12 @@ export declare class ScheduleJob implements IScheduleJob {
     latestRun?: any | null;
     constructor(dataObj: ScheduleJobTable);
     getJobUpdateObject(): {
-        job_id: number | undefined;
         job_name: string;
         job_cron_setting: string;
         consumer: string;
         status: string;
         job_param: any;
         exclusive: boolean;
-        average_time: number;
-        latest_run: any;
     };
     getId(): number | undefined;
     getName(): string;
