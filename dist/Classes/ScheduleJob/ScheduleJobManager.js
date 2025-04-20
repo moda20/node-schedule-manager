@@ -47,7 +47,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const node_cron_1 = require("node-cron");
 const ip_1 = require("ip");
-const app_root_path_1 = __importStar(require("app-root-path"));
+const app_root_path_1 = require("app-root-path");
 const MySQL_1 = __importDefault(require("../Util/MySQL"));
 const ScheduleJob_1 = require("../Entities/ScheduleJob");
 const ScheduleJobLog_1 = require("../Entities/ScheduleJobLog");
@@ -320,12 +320,13 @@ class ScheduleJobManager {
                 }
                 ScheduleJobEventBus_1.default.emit(`scheduleJob:${job.getName()}`, job, log);
                 if (singular) {
-                    ScheduleJobEventBus_1.default.once("completed:" + job.getName(), () => {
+                    ScheduleJobEventBus_1.default.once("completed:" + job.getName(), () => __awaiter(this, void 0, void 0, function* () {
                         if (!this.isRunningJob(job.getId())) {
-                            let consumer = require(app_root_path_1.default + job.getConsumer());
+                            let consumer = (yield Promise.resolve(`${`${app_root_path_1.path + job.getConsumer()}`}`).then(s => __importStar(require(s))))
+                                .default;
                             consumer.off(job.getName());
                         }
-                    });
+                    }));
                 }
                 return { success: true, uniqueSingularId: job.getUniqueSingularId() };
             }

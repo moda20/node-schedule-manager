@@ -288,9 +288,10 @@ class ScheduleJobManager {
       ScheduleJobEventBus.emit(`scheduleJob:${job.getName()}`, job, log);
 
       if (singular) {
-        ScheduleJobEventBus.once("completed:" + job.getName(), () => {
+        ScheduleJobEventBus.once("completed:" + job.getName(), async () => {
           if (!this.isRunningJob(job.getId()!)) {
-            let consumer = require(AppRoot + job.getConsumer());
+            let consumer = (await import(`${path + job.getConsumer()}`))
+              .default;
             consumer.off(job.getName());
           }
         });
