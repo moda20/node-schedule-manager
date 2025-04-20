@@ -223,12 +223,12 @@ class ScheduleJobManager {
         ScheduleJobEventBus.emit('scheduleJob:' + job.getName(), job, log);
 
         if(singular){
-          ScheduleJobEventBus.on('complete:'+job.getName(), ()=>{
+          ScheduleJobEventBus.on('completed:'+job.getName(), ()=>{
             if(!this.isRunningJob(job.getId())){
               let consumer = require(AppRoot + job.getConsumer());
               consumer.off(job.getName());
             }
-            ScheduleJobEventBus.off('complete:'+job.getName());
+            ScheduleJobEventBus.off('completed:'+job.getName());
           })
         }
         return {success:true, uniqueSingularId: job.getUniqueSingularId()};
@@ -288,7 +288,7 @@ class ScheduleJobManager {
       ScheduleJobEventBus.emit(`scheduleJob:${job.getName()}`, job, log);
 
       if (singular) {
-        ScheduleJobEventBus.once("complete:" + job.getName(), () => {
+        ScheduleJobEventBus.once("completed:" + job.getName(), () => {
           if (!this.isRunningJob(job.getId()!)) {
             let consumer = require(AppRoot + job.getConsumer());
             consumer.off(job.getName());
