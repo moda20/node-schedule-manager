@@ -311,21 +311,21 @@ class ScheduleJobManager {
                 let newLogResult = yield ScheduleJobLogRepository_1.ScheduleJobLogRepository.newLog(log);
                 if (!newLogResult.success)
                     return newLogResult;
+                let targetSingularLogId = `${job.getName()}_${jobLogId}`;
                 if (singular) {
-                    if (!this.isRunningJob(job.getId())) {
-                        let consumer = (yield Promise.resolve(`${`${app_root_path_1.path + job.getConsumer()}`}`).then(s => __importStar(require(s)))).default;
-                        consumer.on(job.getName());
-                    }
+                    let consumer = (yield Promise.resolve(`${`${app_root_path_1.path + job.getConsumer()}`}`).then(s => __importStar(require(s)))).default;
+                    consumer.on(targetSingularLogId);
                     job.setUniqueSingularId(jobLogId);
+                    ScheduleJobEventBus_1.default.emit(`scheduleJob:${targetSingularLogId}`, job, log);
                 }
-                ScheduleJobEventBus_1.default.emit(`scheduleJob:${job.getName()}`, job, log);
+                else {
+                    ScheduleJobEventBus_1.default.emit(`scheduleJob:${job.getName()}`, job, log);
+                }
                 if (singular) {
-                    ScheduleJobEventBus_1.default.once("completed:" + job.getName(), () => __awaiter(this, void 0, void 0, function* () {
-                        if (!this.isRunningJob(job.getId())) {
-                            let consumer = (yield Promise.resolve(`${`${app_root_path_1.path + job.getConsumer()}`}`).then(s => __importStar(require(s))))
-                                .default;
-                            consumer.off(job.getName());
-                        }
+                    ScheduleJobEventBus_1.default.once(`completed:${targetSingularLogId}`, () => __awaiter(this, void 0, void 0, function* () {
+                        let consumer = (yield Promise.resolve(`${`${app_root_path_1.path + job.getConsumer()}`}`).then(s => __importStar(require(s))))
+                            .default;
+                        consumer.off(targetSingularLogId);
                     }));
                 }
                 return { success: true, uniqueSingularId: job.getUniqueSingularId() };

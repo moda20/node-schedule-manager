@@ -276,25 +276,29 @@ class ScheduleJobManager {
       });
       let newLogResult = await ScheduleJobLogRepository.newLog(log);
       if (!newLogResult.success) return newLogResult;
-
+      let targetSingularLogId = `${job.getName()}_${jobLogId}`;
       if (singular) {
-        if (!this.isRunningJob(job.getId()!)) {
-          let consumer = (await import(`${path + job.getConsumer()}`)).default;
-          consumer.on(job.getName());
-        }
+        let consumer = (await import(`${path + job.getConsumer()}`)).default;
+        consumer.on(targetSingularLogId);
         job.setUniqueSingularId(jobLogId);
+        ScheduleJobEventBus.emit(
+          `scheduleJob:${targetSingularLogId}`,
+          job,
+          log,
+        );
+      } else {
+        ScheduleJobEventBus.emit(`scheduleJob:${job.getName()}`, job, log);
       }
 
-      ScheduleJobEventBus.emit(`scheduleJob:${job.getName()}`, job, log);
-
       if (singular) {
-        ScheduleJobEventBus.once("completed:" + job.getName(), async () => {
-          if (!this.isRunningJob(job.getId()!)) {
+        ScheduleJobEventBus.once(
+          `completed:${targetSingularLogId}`,
+          async () => {
             let consumer = (await import(`${path + job.getConsumer()}`))
               .default;
-            consumer.off(job.getName());
-          }
-        });
+            consumer.off(targetSingularLogId);
+          },
+        );
       }
 
       return { success: true, uniqueSingularId: job.getUniqueSingularId() };
