@@ -66,7 +66,10 @@ class JobConsumer {
     if (!updateResult.success || !jobUpdateResult.success) {
       return { updateResult, jobUpdateResult };
     } else {
-      ScheduleJobEventBus.emit("completed:" + this.job?.getName(), this.job);
+      let targetSingularLogId = this.job?.getUniqueSingularId()
+        ? `${this.job.getName()}_${this.job?.getUniqueSingularId()}`
+        : this.job?.getName();
+      ScheduleJobEventBus.emit(`completed:${targetSingularLogId}`, this.job);
       return { success: true };
     }
   }

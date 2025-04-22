@@ -25,7 +25,7 @@ class JobConsumer {
     }
     complete(jobLog, result, error) {
         return __awaiter(this, void 0, void 0, function* () {
-            var _a, _b, _c, _d, _e, _f, _g;
+            var _a, _b, _c, _d, _e, _f, _g, _h, _j;
             jobLog.setEndTime((0, moment_1.default)().format("YYYY-MM-DD HH:mm:ss"));
             jobLog.setResult(result);
             jobLog.setError(error);
@@ -43,7 +43,10 @@ class JobConsumer {
                 return { updateResult, jobUpdateResult };
             }
             else {
-                ScheduleJobEventBus_1.default.emit("completed:" + ((_g = this.job) === null || _g === void 0 ? void 0 : _g.getName()), this.job);
+                let targetSingularLogId = ((_g = this.job) === null || _g === void 0 ? void 0 : _g.getUniqueSingularId())
+                    ? `${this.job.getName()}_${(_h = this.job) === null || _h === void 0 ? void 0 : _h.getUniqueSingularId()}`
+                    : (_j = this.job) === null || _j === void 0 ? void 0 : _j.getName();
+                ScheduleJobEventBus_1.default.emit(`completed:${targetSingularLogId}`, this.job);
                 return { success: true };
             }
         });
