@@ -275,7 +275,8 @@ class ScheduleJobManager {
                 let jobLogId = (_a = job.getId()) === null || _a === void 0 ? void 0 : _a.toString();
                 let cronSettingArr = job.getCronSetting().split(" ");
                 //joblogid is a primary key in database;
-                if (cronSettingArr.length >= 6) {
+                if (cronSettingArr.length >= 6 ||
+                    cronSettingArr.every((item) => item === "*")) {
                     jobLogId = jobLogId + "-" + (0, moment_1.default)().format("YYYYMMDDHHmmss");
                 }
                 else if (cronSettingArr[0] !== "*") {
