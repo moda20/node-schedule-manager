@@ -1,4 +1,4 @@
-import { createPool, Pool, PoolConfig, PoolConnection } from "mysql";
+import { createPool, Pool, PoolOptions, PoolConnection } from "mysql2";
 
 class MySQLConnector {
   private pool: Pool | null = null;
@@ -7,7 +7,7 @@ class MySQLConnector {
     this.pool = pool;
   }
 
-  createPool(config: PoolConfig): { success: boolean; err?: string } {
+  createPool(config: PoolOptions): { success: boolean; err?: string } {
     try {
       this.pool = createPool(config);
       return { success: true };

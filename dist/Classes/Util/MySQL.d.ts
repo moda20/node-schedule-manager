@@ -1,8 +1,8 @@
-import { Pool, PoolConfig, PoolConnection } from "mysql";
+import { Pool, PoolOptions, PoolConnection } from "mysql2";
 declare class MySQLConnector {
     private pool;
     setPool(pool: Pool): void;
-    createPool(config: PoolConfig): {
+    createPool(config: PoolOptions): {
         success: boolean;
         err?: string;
     };

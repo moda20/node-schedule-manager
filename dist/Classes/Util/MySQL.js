@@ -9,7 +9,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const mysql_1 = require("mysql");
+const mysql2_1 = require("mysql2");
 class MySQLConnector {
     constructor() {
         this.pool = null;
@@ -19,7 +19,7 @@ class MySQLConnector {
     }
     createPool(config) {
         try {
-            this.pool = (0, mysql_1.createPool)(config);
+            this.pool = (0, mysql2_1.createPool)(config);
             return { success: true };
         }
         catch (err) {

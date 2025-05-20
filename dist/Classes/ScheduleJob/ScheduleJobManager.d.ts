@@ -4,6 +4,7 @@ import { ScheduleJobLog } from "../Entities/ScheduleJobLog";
 import { jobSorting } from "../Repositories/ScheduleJobRepository";
 import { IScheduleJob } from "../Entities/ScheduleJob";
 import JobConsumer from "./Consumer/JobConsumer";
+import { PoolOptions } from "mysql2";
 declare class ScheduleJobManager {
     runningJob: {
         job: IScheduleJob;
@@ -11,7 +12,7 @@ declare class ScheduleJobManager {
         consumer: JobConsumer;
     }[];
     initWithConnPool(pool: any): Promise<any>;
-    initWithMySQLConfig(config: any): Promise<any>;
+    initWithMySQLConfig(config: PoolOptions): Promise<any>;
     init(): Promise<{
         success: boolean;
         err?: string;

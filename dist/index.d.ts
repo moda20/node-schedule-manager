@@ -12,7 +12,7 @@ declare const _default: {
             consumer: JobConsumer;
         }[];
         initWithConnPool(pool: any): Promise<any>;
-        initWithMySQLConfig(config: any): Promise<any>;
+        initWithMySQLConfig(config: import("mysql2").PoolOptions): Promise<any>;
         init(): Promise<{
             success: boolean;
             err?: string;

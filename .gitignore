@@ -1,4 +1,4 @@
 # .gitignore
 node_modules
-test.js
 testConsumer.js
+.env

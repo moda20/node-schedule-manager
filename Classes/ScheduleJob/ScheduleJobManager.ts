@@ -17,6 +17,7 @@ import InitSQL from "../../init_sql";
 import { IScheduleJob } from "../Entities/ScheduleJob";
 import Moment from "moment/moment";
 import JobConsumer from "./Consumer/JobConsumer";
+import { PoolOptions } from "mysql2";
 
 class ScheduleJobManager {
   runningJob: {
@@ -30,7 +31,7 @@ class ScheduleJobManager {
     return await this.init();
   }
 
-  async initWithMySQLConfig(config: any): Promise<any> {
+  async initWithMySQLConfig(config: PoolOptions): Promise<any> {
     MySQL.createPool(config);
     return await this.init();
   }
