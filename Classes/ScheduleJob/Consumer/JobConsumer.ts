@@ -9,18 +9,20 @@ class JobConsumer {
   job?: IScheduleJob;
   jobLog?: IScheduleJobLog;
 
+  runHandler = (...args: [IScheduleJob, IScheduleJobLog]) => {
+    try {
+      return this.preRun(...args);
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
   on(jobName: string) {
-    ScheduleJobEventBus.on(
-      "scheduleJob:" + jobName,
-      (...args: [IScheduleJob, IScheduleJobLog]) => this.preRun(...args),
-    );
+    ScheduleJobEventBus.on("scheduleJob:" + jobName, this.runHandler);
   }
 
   off(jobName: string) {
-    ScheduleJobEventBus.off(
-      "scheduleJob:" + jobName,
-      (...args: [IScheduleJob, IScheduleJobLog]) => this.preRun(...args),
-    );
+    ScheduleJobEventBus.off("scheduleJob:" + jobName, this.runHandler);
   }
 
   async complete(

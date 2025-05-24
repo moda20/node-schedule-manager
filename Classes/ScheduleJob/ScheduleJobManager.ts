@@ -315,7 +315,11 @@ class ScheduleJobManager {
     for (const job of jobs) {
       try {
         if (!job.getId()) continue;
-        let consumer = (await import(`${path + job.getConsumer()}`)).default;
+        // creating a random version to get over the consumer file ES6's cache
+        const consumerVersion = Math.random() * 99999;
+        let consumer = (
+          await import(`${path + job.getConsumer()}?v=${consumerVersion}`)
+        ).default;
         consumer.on(job.getName());
         let task = schedule(job.getCronSetting(), async () =>
           this.jobRegistration(job.getId()!),

@@ -17,11 +17,21 @@ const ScheduleJobLogRepository_1 = require("../../Repositories/ScheduleJobLogRep
 const ScheduleJobRepository_1 = require("../../Repositories/ScheduleJobRepository");
 const ScheduleJobEventBus_1 = __importDefault(require("../ScheduleJobEventBus"));
 class JobConsumer {
+    constructor() {
+        this.runHandler = (...args) => {
+            try {
+                return this.preRun(...args);
+            }
+            catch (err) {
+                console.log(err);
+            }
+        };
+    }
     on(jobName) {
-        ScheduleJobEventBus_1.default.on("scheduleJob:" + jobName, (...args) => this.preRun(...args));
+        ScheduleJobEventBus_1.default.on("scheduleJob:" + jobName, this.runHandler);
     }
     off(jobName) {
-        ScheduleJobEventBus_1.default.off("scheduleJob:" + jobName, (...args) => this.preRun(...args));
+        ScheduleJobEventBus_1.default.off("scheduleJob:" + jobName, this.runHandler);
     }
     complete(jobLog, result, error) {
         return __awaiter(this, void 0, void 0, function* () {

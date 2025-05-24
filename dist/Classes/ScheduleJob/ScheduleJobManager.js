@@ -342,7 +342,9 @@ class ScheduleJobManager {
                 try {
                     if (!job.getId())
                         continue;
-                    let consumer = (yield Promise.resolve(`${`${app_root_path_1.path + job.getConsumer()}`}`).then(s => __importStar(require(s)))).default;
+                    // creating a random version to get over the consumer file ES6's cache
+                    const consumerVersion = Math.random() * 99999;
+                    let consumer = (yield Promise.resolve(`${`${app_root_path_1.path + job.getConsumer()}?v=${consumerVersion}`}`).then(s => __importStar(require(s)))).default;
                     consumer.on(job.getName());
                     let task = (0, node_cron_1.schedule)(job.getCronSetting(), () => __awaiter(this, void 0, void 0, function* () { return this.jobRegistration(job.getId()); }));
                     this.runningJob.push({ job, task, consumer });
