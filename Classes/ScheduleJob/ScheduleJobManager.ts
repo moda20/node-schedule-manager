@@ -153,7 +153,7 @@ class ScheduleJobManager {
 
   async jobRegistration(
     jobId: number,
-    { singular }: { singular?: boolean } = {},
+    { singular, extraParams }: { singular?: boolean; extraParams?: any } = {},
   ): Promise<{ success: boolean; uniqueSingularId?: string; err?: string }> {
     let getJobResult = await ScheduleJobRepository.getJobById(jobId);
     if (!getJobResult.success) return getJobResult;
@@ -285,6 +285,7 @@ class ScheduleJobManager {
         let consumer = (await import(`${path + job.getConsumer()}`)).default;
         consumer.on(targetSingularLogId);
         job.setUniqueSingularId(jobLogId);
+        job.setExtraParams(extraParams);
         ScheduleJobEventBus.emit(
           `scheduleJob:${targetSingularLogId}`,
           job,

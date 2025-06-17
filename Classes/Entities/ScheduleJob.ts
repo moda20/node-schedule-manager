@@ -1,5 +1,7 @@
 // ScheduleJob.ts
 
+import { name } from "ci-info";
+
 export interface IScheduleJob {
   createdAt?: Date;
   id?: number;
@@ -7,15 +9,16 @@ export interface IScheduleJob {
   cronSetting: string;
   consumer: string;
   status: string;
-  param: any; // Adjust type based on actual usage
+  param: any;
   exclusive: boolean;
   uniqueSingularId?: string;
   averageTime: number;
   latestRun?: any | null;
+  extraParams?: { [key: string]: any };
 
   getId(): number | undefined;
   getName(): string;
-  getParam(): any; // Adjust type based on actual usage
+  getParam(): any;
   getCronSetting(): string;
   getConsumer(): string;
   getExclusive(): boolean;
@@ -24,7 +27,7 @@ export interface IScheduleJob {
   setAverageTime(averageTime: number): void;
   setId(id: number): void;
   setName(name: string): void;
-  setParam(param: any): void; // Adjust type based on actual usage
+  setParam(param: any): void;
   setCronSetting(cronSetting: string): void;
   setConsumer(consumer: string): void;
   setExclusive(exclusive: boolean): void;
@@ -36,6 +39,8 @@ export interface IScheduleJob {
   getLatestRun(): Date | null;
   setLatestRun(latestRun: Date | null): void;
   getJobUpdateObject(): ScheduleJobTable;
+  getExtraParams(): { [key: string]: any } | undefined;
+  setExtraParams(extraParams: { [key: string]: any }): void;
 }
 
 export interface ScheduleJobTable {
@@ -58,11 +63,12 @@ export class ScheduleJob implements IScheduleJob {
   cronSetting: string;
   consumer: string;
   status: string;
-  param: any; // Adjust type based on actual usage
+  param: any;
   exclusive: boolean;
   uniqueSingularId?: string;
   averageTime: number;
   latestRun?: any | null;
+  extraParams?: { [key: string]: any };
 
   constructor(dataObj: ScheduleJobTable) {
     this.createdAt = dataObj.created_at;
@@ -172,6 +178,14 @@ export class ScheduleJob implements IScheduleJob {
   }
   setLatestRun(latestRun: any) {
     this.latestRun = latestRun;
+  }
+
+  getExtraParams(): { [p: string]: any } | undefined {
+    return this.extraParams;
+  }
+
+  setExtraParams(extraParams: { [p: string]: any } | undefined): void {
+    this.extraParams = extraParams;
   }
 }
 
