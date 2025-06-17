@@ -92,6 +92,12 @@ class ScheduleJob {
     setLatestRun(latestRun) {
         this.latestRun = latestRun;
     }
+    getExtraParams() {
+        return this.extraParams;
+    }
+    setExtraParams(extraParams) {
+        this.extraParams = extraParams;
+    }
 }
 exports.ScheduleJob = ScheduleJob;
 exports.default = ScheduleJob;

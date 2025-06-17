@@ -95,8 +95,9 @@ declare class ScheduleJobManager {
         };
     }>;
     stopJobById(jobId: number): boolean;
-    jobRegistration(jobId: number, { singular }?: {
+    jobRegistration(jobId: number, { singular, extraParams }?: {
         singular?: boolean;
+        extraParams?: any;
     }): Promise<{
         success: boolean;
         uniqueSingularId?: string;

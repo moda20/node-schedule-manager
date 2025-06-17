@@ -10,6 +10,9 @@ export interface IScheduleJob {
     uniqueSingularId?: string;
     averageTime: number;
     latestRun?: any | null;
+    extraParams?: {
+        [key: string]: any;
+    };
     getId(): number | undefined;
     getName(): string;
     getParam(): any;
@@ -33,6 +36,12 @@ export interface IScheduleJob {
     getLatestRun(): Date | null;
     setLatestRun(latestRun: Date | null): void;
     getJobUpdateObject(): ScheduleJobTable;
+    getExtraParams(): {
+        [key: string]: any;
+    } | undefined;
+    setExtraParams(extraParams: {
+        [key: string]: any;
+    }): void;
 }
 export interface ScheduleJobTable {
     job_name: string;
@@ -58,6 +67,9 @@ export declare class ScheduleJob implements IScheduleJob {
     uniqueSingularId?: string;
     averageTime: number;
     latestRun?: any | null;
+    extraParams?: {
+        [key: string]: any;
+    };
     constructor(dataObj: ScheduleJobTable);
     getJobUpdateObject(): {
         job_name: string;
@@ -89,6 +101,12 @@ export declare class ScheduleJob implements IScheduleJob {
     setCreatedAt(createdAt: Date): void;
     getLatestRun(): any;
     setLatestRun(latestRun: any): void;
+    getExtraParams(): {
+        [p: string]: any;
+    } | undefined;
+    setExtraParams(extraParams: {
+        [p: string]: any;
+    } | undefined): void;
 }
 export default ScheduleJob;
 //# sourceMappingURL=ScheduleJob.d.ts.map

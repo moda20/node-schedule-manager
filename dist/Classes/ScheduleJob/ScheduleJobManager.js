@@ -185,7 +185,7 @@ class ScheduleJobManager {
         return false;
     }
     jobRegistration(jobId_1) {
-        return __awaiter(this, arguments, void 0, function* (jobId, { singular } = {}) {
+        return __awaiter(this, arguments, void 0, function* (jobId, { singular, extraParams } = {}) {
             var _a;
             let getJobResult = yield ScheduleJobRepository_1.ScheduleJobRepository.getJobById(jobId);
             if (!getJobResult.success)
@@ -317,6 +317,7 @@ class ScheduleJobManager {
                     let consumer = (yield Promise.resolve(`${`${app_root_path_1.path + job.getConsumer()}`}`).then(s => __importStar(require(s)))).default;
                     consumer.on(targetSingularLogId);
                     job.setUniqueSingularId(jobLogId);
+                    job.setExtraParams(extraParams);
                     ScheduleJobEventBus_1.default.emit(`scheduleJob:${targetSingularLogId}`, job, log);
                 }
                 else {
