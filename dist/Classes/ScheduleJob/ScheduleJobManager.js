@@ -314,21 +314,18 @@ class ScheduleJobManager {
                     return newLogResult;
                 let targetSingularLogId = `${job.getName()}_${jobLogId}`;
                 if (singular) {
-                    let consumer = (yield Promise.resolve(`${`${app_root_path_1.path + job.getConsumer()}`}`).then(s => __importStar(require(s)))).default;
+                    const consumerVersion = Math.random() * 99999;
+                    let consumer = (yield Promise.resolve(`${`${app_root_path_1.path + job.getConsumer()}?v=${consumerVersion}`}`).then(s => __importStar(require(s)))).default;
                     consumer.on(targetSingularLogId);
                     job.setUniqueSingularId(jobLogId);
                     job.setExtraParams(extraParams);
                     ScheduleJobEventBus_1.default.emit(`scheduleJob:${targetSingularLogId}`, job, log);
+                    ScheduleJobEventBus_1.default.once(`completed:${targetSingularLogId}`, () => __awaiter(this, void 0, void 0, function* () {
+                        consumer.off(targetSingularLogId);
+                    }));
                 }
                 else {
                     ScheduleJobEventBus_1.default.emit(`scheduleJob:${job.getName()}`, job, log);
-                }
-                if (singular) {
-                    ScheduleJobEventBus_1.default.once(`completed:${targetSingularLogId}`, () => __awaiter(this, void 0, void 0, function* () {
-                        let consumer = (yield Promise.resolve(`${`${app_root_path_1.path + job.getConsumer()}`}`).then(s => __importStar(require(s))))
-                            .default;
-                        consumer.off(targetSingularLogId);
-                    }));
                 }
                 return { success: true, uniqueSingularId: job.getUniqueSingularId() };
             }
