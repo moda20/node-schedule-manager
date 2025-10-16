@@ -282,7 +282,10 @@ class ScheduleJobManager {
       if (!newLogResult.success) return newLogResult;
       let targetSingularLogId = `${job.getName()}_${jobLogId}`;
       if (singular) {
-        let consumer = (await import(`${path + job.getConsumer()}`)).default;
+        const consumerVersion = Math.random() * 99999;
+        let consumer = (
+          await import(`${path + job.getConsumer()}?v=${consumerVersion}`)
+        ).default;
         consumer.on(targetSingularLogId);
         job.setUniqueSingularId(jobLogId);
         job.setExtraParams(extraParams);
@@ -291,19 +294,14 @@ class ScheduleJobManager {
           job,
           log,
         );
-      } else {
-        ScheduleJobEventBus.emit(`scheduleJob:${job.getName()}`, job, log);
-      }
-
-      if (singular) {
         ScheduleJobEventBus.once(
           `completed:${targetSingularLogId}`,
           async () => {
-            let consumer = (await import(`${path + job.getConsumer()}`))
-              .default;
             consumer.off(targetSingularLogId);
           },
         );
+      } else {
+        ScheduleJobEventBus.emit(`scheduleJob:${job.getName()}`, job, log);
       }
 
       return { success: true, uniqueSingularId: job.getUniqueSingularId() };
