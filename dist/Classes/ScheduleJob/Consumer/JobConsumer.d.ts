@@ -27,7 +27,7 @@ declare class JobConsumer {
         success: boolean;
         err?: string;
     }>;
-    error(error: Error): void;
+    error(error: any): void;
     serializeLogs(logsData: any, initialLevel?: number, currentLevel?: number): any;
     logEvent(data: any, serializer?: (data: any) => any): void;
     preRun(job: IScheduleJob, jobLog: IScheduleJobLog): Promise<{

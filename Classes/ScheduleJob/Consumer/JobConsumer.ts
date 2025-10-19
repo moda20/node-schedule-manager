@@ -64,9 +64,13 @@ class JobConsumer {
         jobLog.getJobId(),
         newAverageTime,
       );
+    let targetSingularLogId = this.job?.getUniqueSingularId()
+      ? `${this.job.getName()}_${this.job?.getUniqueSingularId()}`
+      : this.job?.getName();
 
     if (!updateResult.success || !jobUpdateResult.success) {
-      return { updateResult, jobUpdateResult };
+      ScheduleJobEventBus.emit(`completed:${targetSingularLogId}`, this.job);
+      return { updateResult, jobUpdateResult, success: false };
     } else {
       let targetSingularLogId = this.job?.getUniqueSingularId()
         ? `${this.job.getName()}_${this.job?.getUniqueSingularId()}`
@@ -76,7 +80,7 @@ class JobConsumer {
     }
   }
 
-  error(error: Error) {
+  error(error: any) {
     this.jobLog?.logEventBus.emit(
       "error:" + (this.job?.getUniqueSingularId() ?? this.job?.getId()),
       error,

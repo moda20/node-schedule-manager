@@ -35,7 +35,7 @@ class JobConsumer {
     }
     complete(jobLog, result, error) {
         return __awaiter(this, void 0, void 0, function* () {
-            var _a, _b, _c, _d, _e, _f, _g, _h, _j;
+            var _a, _b, _c, _d, _e, _f, _g, _h, _j, _k, _l, _m;
             jobLog.setEndTime((0, moment_1.default)().format("YYYY-MM-DD HH:mm:ss"));
             jobLog.setResult(result);
             jobLog.setError(error);
@@ -49,13 +49,17 @@ class JobConsumer {
             const newTimeInSeconds = (0, moment_1.default)(jobLog.getEndTime()).diff((0, moment_1.default)(jobLog.getStartTime()), "seconds");
             const newAverageTime = oldAverageTime + (newTimeInSeconds - oldAverageTime) / numberOfRuns;
             const jobUpdateResult = yield ScheduleJobRepository_1.ScheduleJobRepository.updateJobAverageRunningTime(jobLog.getJobId(), newAverageTime);
+            let targetSingularLogId = ((_g = this.job) === null || _g === void 0 ? void 0 : _g.getUniqueSingularId())
+                ? `${this.job.getName()}_${(_h = this.job) === null || _h === void 0 ? void 0 : _h.getUniqueSingularId()}`
+                : (_j = this.job) === null || _j === void 0 ? void 0 : _j.getName();
             if (!updateResult.success || !jobUpdateResult.success) {
-                return { updateResult, jobUpdateResult };
+                ScheduleJobEventBus_1.default.emit(`completed:${targetSingularLogId}`, this.job);
+                return { updateResult, jobUpdateResult, success: false };
             }
             else {
-                let targetSingularLogId = ((_g = this.job) === null || _g === void 0 ? void 0 : _g.getUniqueSingularId())
-                    ? `${this.job.getName()}_${(_h = this.job) === null || _h === void 0 ? void 0 : _h.getUniqueSingularId()}`
-                    : (_j = this.job) === null || _j === void 0 ? void 0 : _j.getName();
+                let targetSingularLogId = ((_k = this.job) === null || _k === void 0 ? void 0 : _k.getUniqueSingularId())
+                    ? `${this.job.getName()}_${(_l = this.job) === null || _l === void 0 ? void 0 : _l.getUniqueSingularId()}`
+                    : (_m = this.job) === null || _m === void 0 ? void 0 : _m.getName();
                 ScheduleJobEventBus_1.default.emit(`completed:${targetSingularLogId}`, this.job);
                 return { success: true };
             }
