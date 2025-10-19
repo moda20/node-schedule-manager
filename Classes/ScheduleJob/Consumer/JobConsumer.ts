@@ -33,6 +33,7 @@ class JobConsumer {
     | {
         updateResult: { success: boolean };
         jobUpdateResult: { success: boolean };
+        success: boolean;
       }
     | { success: boolean; err?: string }
   > {
