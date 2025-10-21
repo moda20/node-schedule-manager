@@ -60,7 +60,8 @@ class JobConsumer {
     );
     const newAverageTime =
       Number(oldAverageTime) +
-      (newTimeInSeconds - Number(oldAverageTime)) / Number(numberOfRuns);
+      (Number(newTimeInSeconds) - Number(oldAverageTime)) /
+        Number(numberOfRuns);
     const jobUpdateResult =
       await ScheduleJobRepository.updateJobAverageRunningTime(
         jobLog.getJobId(),
