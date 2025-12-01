@@ -86,7 +86,7 @@ class ScheduleJobLogRepository {
                 const jobIds = Array.isArray(jobId) ? jobId : [jobId];
                 const sql = `
         SELECT job_id                     as id,
-               AVG(end_time - start_time) as avgTime,
+               AVG(TIME_TO_SEC(TIMEDIFF(end_time, start_time))) as avgTime,
                MAX(start_time)            as latestStart,
                (SELECT end_time as lastEnds
                 FROM schedule_job_log as sjl

@@ -47,7 +47,9 @@ class JobConsumer {
                 oldAverageTime = stats.avgTime;
             }
             const newTimeInSeconds = (0, moment_1.default)(jobLog.getEndTime()).diff((0, moment_1.default)(jobLog.getStartTime()), "seconds");
-            const newAverageTime = oldAverageTime + (newTimeInSeconds - oldAverageTime) / numberOfRuns;
+            const newAverageTime = Number(oldAverageTime) +
+                Number((Number(newTimeInSeconds) - Number(oldAverageTime)) /
+                    Number(numberOfRuns));
             const jobUpdateResult = yield ScheduleJobRepository_1.ScheduleJobRepository.updateJobAverageRunningTime(jobLog.getJobId(), newAverageTime);
             let targetSingularLogId = ((_g = this.job) === null || _g === void 0 ? void 0 : _g.getUniqueSingularId())
                 ? `${this.job.getName()}_${(_h = this.job) === null || _h === void 0 ? void 0 : _h.getUniqueSingularId()}`
