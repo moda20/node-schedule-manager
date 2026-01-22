@@ -34,6 +34,7 @@ class JobConsumer {
         updateResult: { success: boolean };
         jobUpdateResult: { success: boolean };
         success: boolean;
+        errData?: any;
       }
     | { success: boolean; err?: string }
   > {
@@ -75,7 +76,17 @@ class JobConsumer {
 
     if (!updateResult.success || !jobUpdateResult.success) {
       ScheduleJobEventBus.emit(`completed:${targetSingularLogId}`, this.job);
-      return { updateResult, jobUpdateResult, success: false };
+      return {
+        updateResult,
+        jobUpdateResult,
+        success: false,
+        errData: {
+          oldAverageTime,
+          numberOfRuns,
+          newTimeInSeconds,
+          newAverageTime,
+        },
+      };
     } else {
       let targetSingularLogId = this.job?.getUniqueSingularId()
         ? `${this.job.getName()}_${this.job?.getUniqueSingularId()}`

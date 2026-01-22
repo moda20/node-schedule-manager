@@ -56,7 +56,17 @@ class JobConsumer {
                 : (_j = this.job) === null || _j === void 0 ? void 0 : _j.getName();
             if (!updateResult.success || !jobUpdateResult.success) {
                 ScheduleJobEventBus_1.default.emit(`completed:${targetSingularLogId}`, this.job);
-                return { updateResult, jobUpdateResult, success: false };
+                return {
+                    updateResult,
+                    jobUpdateResult,
+                    success: false,
+                    errData: {
+                        oldAverageTime,
+                        numberOfRuns,
+                        newTimeInSeconds,
+                        newAverageTime,
+                    },
+                };
             }
             else {
                 let targetSingularLogId = ((_k = this.job) === null || _k === void 0 ? void 0 : _k.getUniqueSingularId())

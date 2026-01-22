@@ -11,6 +11,7 @@ declare class JobConsumer {
             success: boolean;
         };
         success: boolean;
+        errData?: any;
     } | {
         success: boolean;
         err?: string;
@@ -25,6 +26,7 @@ declare class JobConsumer {
             success: boolean;
         };
         success: boolean;
+        errData?: any;
     } | {
         success: boolean;
         err?: string;
@@ -40,6 +42,7 @@ declare class JobConsumer {
             success: boolean;
         };
         success: boolean;
+        errData?: any;
     } | {
         success: boolean;
         err?: string;
@@ -52,6 +55,7 @@ declare class JobConsumer {
             success: boolean;
         };
         success: boolean;
+        errData?: any;
     } | {
         success: boolean;
         err?: string;
