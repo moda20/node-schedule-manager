@@ -14,6 +14,8 @@ declare class JobConsumer {
     } | {
         success: boolean;
         err?: string;
+        newTimeInSeconds?: number;
+        newAverageTime?: number;
     }> | undefined;
     on(jobName: string): void;
     off(jobName: string): void;
@@ -28,6 +30,8 @@ declare class JobConsumer {
     } | {
         success: boolean;
         err?: string;
+        newTimeInSeconds?: number;
+        newAverageTime?: number;
     }>;
     error(error: any): void;
     serializeLogs(logsData: any, initialLevel?: number, currentLevel?: number): any;
@@ -43,6 +47,8 @@ declare class JobConsumer {
     } | {
         success: boolean;
         err?: string;
+        newTimeInSeconds?: number;
+        newAverageTime?: number;
     }>;
     run(job: IScheduleJob, jobLog: IScheduleJobLog): Promise<{
         updateResult: {
@@ -55,6 +61,8 @@ declare class JobConsumer {
     } | {
         success: boolean;
         err?: string;
+        newTimeInSeconds?: number;
+        newAverageTime?: number;
     }>;
 }
 export default JobConsumer;

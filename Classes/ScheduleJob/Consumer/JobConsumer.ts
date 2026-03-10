@@ -35,7 +35,12 @@ class JobConsumer {
         jobUpdateResult: { success: boolean };
         success: boolean;
       }
-    | { success: boolean; err?: string }
+    | {
+        success: boolean;
+        err?: string;
+        newTimeInSeconds?: number;
+        newAverageTime?: number;
+      }
   > {
     jobLog.setEndTime(Moment().format("YYYY-MM-DD HH:mm:ss"));
     jobLog.setResult(result);
@@ -81,7 +86,7 @@ class JobConsumer {
         ? `${this.job.getName()}_${this.job?.getUniqueSingularId()}`
         : this.job?.getName();
       ScheduleJobEventBus.emit(`completed:${targetSingularLogId}`, this.job);
-      return { success: true };
+      return { success: true, newTimeInSeconds, newAverageTime };
     }
   }
 

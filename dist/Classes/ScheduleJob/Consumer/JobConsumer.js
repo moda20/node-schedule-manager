@@ -63,7 +63,7 @@ class JobConsumer {
                     ? `${this.job.getName()}_${(_l = this.job) === null || _l === void 0 ? void 0 : _l.getUniqueSingularId()}`
                     : (_m = this.job) === null || _m === void 0 ? void 0 : _m.getName();
                 ScheduleJobEventBus_1.default.emit(`completed:${targetSingularLogId}`, this.job);
-                return { success: true };
+                return { success: true, newTimeInSeconds, newAverageTime };
             }
         });
     }
