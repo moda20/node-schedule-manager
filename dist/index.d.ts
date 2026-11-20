@@ -4,6 +4,8 @@ import ScheduleJobEventBus from "./Classes/ScheduleJob/ScheduleJobEventBus";
 import ScheduleJobLogEventBus from "./Classes/ScheduleJob/ScheduleJobLogEventBus";
 import { ScheduleJob, IScheduleJob } from "./Classes/Entities/ScheduleJob";
 import { ScheduleJobLog, IScheduleJobLog } from "./Classes/Entities/ScheduleJobLog";
+import type { extraPoolConfig, loggers } from "./Classes/Entities/utils";
+import type { jobSorting } from "./Classes/Repositories/ScheduleJobRepository";
 declare const _default: {
     ScheduleJobManager: {
         runningJob: {
@@ -12,7 +14,7 @@ declare const _default: {
             consumer: JobConsumer;
         }[];
         initWithConnPool(pool: any): Promise<any>;
-        initWithMySQLConfig(poolOptions: import("mysql2").PoolOptions, config: import("./Classes/Entities/utils.js").extraPoolConfig): Promise<any>;
+        initWithMySQLConfig(poolOptions: import("mysql2").PoolOptions, config: extraPoolConfig): Promise<any>;
         init(): Promise<{
             success: boolean;
             err?: string;
@@ -77,7 +79,7 @@ declare const _default: {
             job?: ScheduleJob;
             err?: string;
         }>;
-        getJobsByStatus(status: string | string[], sorting?: import("./Classes/Repositories/ScheduleJobRepository.js").jobSorting): Promise<{
+        getJobsByStatus(status: string | string[], sorting?: jobSorting): Promise<{
             success: boolean;
             jobs?: ScheduleJob[];
             err?: string;
@@ -132,5 +134,5 @@ export declare const Entities: {
     ScheduleJob: typeof ScheduleJob;
     ScheduleJobLog: typeof ScheduleJobLog;
 };
-export type { IScheduleJob, IScheduleJobLog };
+export type { IScheduleJob, IScheduleJobLog, extraPoolConfig, loggers, jobSorting, };
 //# sourceMappingURL=index.d.ts.map

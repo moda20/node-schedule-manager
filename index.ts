@@ -7,6 +7,8 @@ import {
   ScheduleJobLog,
   IScheduleJobLog,
 } from "./Classes/Entities/ScheduleJobLog";
+import type { extraPoolConfig, loggers } from "./Classes/Entities/utils";
+import type { jobSorting } from "./Classes/Repositories/ScheduleJobRepository";
 
 export default {
   ScheduleJobManager: ScheduleJobManager,
@@ -27,4 +29,10 @@ export {
 };
 export const Entities = { ScheduleJob, ScheduleJobLog };
 
-export type { IScheduleJob, IScheduleJobLog };
+export type {
+  IScheduleJob,
+  IScheduleJobLog,
+  extraPoolConfig,
+  loggers,
+  jobSorting,
+};
