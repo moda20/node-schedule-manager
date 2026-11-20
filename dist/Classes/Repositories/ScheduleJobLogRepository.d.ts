@@ -40,8 +40,8 @@ export declare class ScheduleJobLogRepository {
         success: boolean;
         err: string;
     } | {
-        success: boolean;
         err?: undefined;
+        success: boolean;
     }>;
 }
 //# sourceMappingURL=ScheduleJobLogRepository.d.ts.map

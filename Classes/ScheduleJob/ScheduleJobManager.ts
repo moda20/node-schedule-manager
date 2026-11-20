@@ -18,6 +18,8 @@ import { IScheduleJob } from "../Entities/ScheduleJob";
 import Moment from "moment/moment";
 import JobConsumer from "./Consumer/JobConsumer";
 import { PoolOptions } from "mysql2";
+import { extraPoolConfig } from "../Entities/utils";
+import { initLogger, logger } from "../Util/shared";
 
 class ScheduleJobManager {
   runningJob: {
@@ -31,8 +33,14 @@ class ScheduleJobManager {
     return await this.init();
   }
 
-  async initWithMySQLConfig(config: PoolOptions): Promise<any> {
-    MySQL.createPool(config);
+  async initWithMySQLConfig(
+    poolOptions: PoolOptions,
+    config: extraPoolConfig,
+  ): Promise<any> {
+    MySQL.createPool(poolOptions);
+    if (config.loggers) {
+      initLogger(config.loggers);
+    }
     return await this.init();
   }
 
@@ -320,8 +328,17 @@ class ScheduleJobManager {
           await import(`${path + job.getConsumer()}?v=${consumerVersion}`)
         ).default;
         consumer.on(job.getName());
-        let task = schedule(job.getCronSetting(), async () =>
-          this.jobRegistration(job.getId()!),
+        let task = schedule(
+          job.getCronSetting(),
+          async () => {
+            return this.jobRegistration(job.getId()!).catch((err: any) => {
+              logger.error(err);
+              return err;
+            });
+          },
+          {
+            logger: logger,
+          },
         );
         this.runningJob.push({ job, task, consumer });
       } catch (err) {

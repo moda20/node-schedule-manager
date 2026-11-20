@@ -68,8 +68,9 @@ class JobConsumer {
         });
     }
     error(error) {
-        var _a, _b, _c, _d;
-        (_a = this.jobLog) === null || _a === void 0 ? void 0 : _a.logEventBus.emit("error:" + ((_c = (_b = this.job) === null || _b === void 0 ? void 0 : _b.getUniqueSingularId()) !== null && _c !== void 0 ? _c : (_d = this.job) === null || _d === void 0 ? void 0 : _d.getId()), error);
+        var _a, _b, _c;
+        var _d;
+        (_a = this.jobLog) === null || _a === void 0 ? void 0 : _a.logEventBus.emit("error:" + ((_d = (_b = this.job) === null || _b === void 0 ? void 0 : _b.getUniqueSingularId()) !== null && _d !== void 0 ? _d : (_c = this.job) === null || _c === void 0 ? void 0 : _c.getId()), error);
     }
     serializeLogs(logsData, initialLevel = 2, currentLevel = 0) {
         if (typeof logsData === "string")
@@ -97,12 +98,13 @@ class JobConsumer {
         return serializedObj;
     }
     logEvent(data, serializer) {
-        var _a, _b, _c, _d;
+        var _a, _b, _c;
+        var _d;
         const serializedData = serializer
             ? serializer(data)
             : this.serializeLogs(data);
         if ((_a = this.jobLog) === null || _a === void 0 ? void 0 : _a.logEventBus) {
-            this.jobLog.logEventBus.emit("jobLog:" + ((_c = (_b = this.job) === null || _b === void 0 ? void 0 : _b.getUniqueSingularId()) !== null && _c !== void 0 ? _c : (_d = this.job) === null || _d === void 0 ? void 0 : _d.getId()), serializedData);
+            this.jobLog.logEventBus.emit("jobLog:" + ((_d = (_b = this.job) === null || _b === void 0 ? void 0 : _b.getUniqueSingularId()) !== null && _d !== void 0 ? _d : (_c = this.job) === null || _c === void 0 ? void 0 : _c.getId()), serializedData);
         }
     }
     preRun(job, jobLog) {

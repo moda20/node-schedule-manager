@@ -12,7 +12,7 @@ declare const _default: {
             consumer: JobConsumer;
         }[];
         initWithConnPool(pool: any): Promise<any>;
-        initWithMySQLConfig(config: import("mysql2").PoolOptions): Promise<any>;
+        initWithMySQLConfig(poolOptions: import("mysql2").PoolOptions, config: import("./Classes/Entities/utils.js").extraPoolConfig): Promise<any>;
         init(): Promise<{
             success: boolean;
             err?: string;
@@ -47,18 +47,18 @@ declare const _default: {
             err?: string;
         }>;
         newJob(name: string, cronSetting: string, param: any, consumer: string, exclusive: boolean, status: string): Promise<{
+            err?: undefined;
             success: boolean;
             job: ScheduleJob;
-            err?: undefined;
         } | {
-            job: undefined;
             success: boolean;
             jobId?: number;
             err?: string;
+            job: undefined;
         } | {
+            job?: undefined;
             success: boolean;
             err: string;
-            job?: undefined;
         }>;
         updateJob(jobId: number, job: IScheduleJob): Promise<{
             success: boolean;
@@ -93,6 +93,9 @@ declare const _default: {
                 err: string;
                 stack: string | undefined;
             };
+        } | {
+            err?: undefined;
+            success: boolean;
         }>;
         stopJobById(jobId: number): boolean;
         jobRegistration(jobId: number, { singular, extraParams }?: {
@@ -110,14 +113,14 @@ declare const _default: {
                 stack: string | undefined;
             };
         } | {
-            success: boolean;
             err?: undefined;
+            success: boolean;
         }>;
         isRunningJob(jobId: number): boolean;
     };
-    ScheduleJobLogEventBus: import("events")<[never]>;
+    ScheduleJobLogEventBus: import("node:events")<any>;
     JobConsumer: typeof JobConsumer;
-    ScheduleJobEventBus: import("events")<[never]>;
+    ScheduleJobEventBus: import("node:events")<any>;
     Entities: {
         ScheduleJob: typeof ScheduleJob;
         ScheduleJobLog: typeof ScheduleJobLog;

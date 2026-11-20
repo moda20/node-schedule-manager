@@ -57,6 +57,7 @@ const ScheduleJobEventBus_1 = __importDefault(require("./ScheduleJobEventBus"));
 const ScheduleJobLogEventBus_1 = __importDefault(require("./ScheduleJobLogEventBus"));
 const init_sql_1 = __importDefault(require("../../init_sql"));
 const moment_1 = __importDefault(require("moment/moment"));
+const shared_1 = require("../Util/shared");
 class ScheduleJobManager {
     constructor() {
         this.runningJob = [];
@@ -67,9 +68,12 @@ class ScheduleJobManager {
             return yield this.init();
         });
     }
-    initWithMySQLConfig(config) {
+    initWithMySQLConfig(poolOptions, config) {
         return __awaiter(this, void 0, void 0, function* () {
-            MySQL_1.default.createPool(config);
+            MySQL_1.default.createPool(poolOptions);
+            if (config.loggers) {
+                (0, shared_1.initLogger)(config.loggers);
+            }
             return yield this.init();
         });
     }
@@ -344,7 +348,14 @@ class ScheduleJobManager {
                     const consumerVersion = Math.random() * 99999;
                     let consumer = (yield Promise.resolve(`${`${app_root_path_1.path + job.getConsumer()}?v=${consumerVersion}`}`).then(s => __importStar(require(s)))).default;
                     consumer.on(job.getName());
-                    let task = (0, node_cron_1.schedule)(job.getCronSetting(), () => __awaiter(this, void 0, void 0, function* () { return this.jobRegistration(job.getId()); }));
+                    let task = (0, node_cron_1.schedule)(job.getCronSetting(), () => __awaiter(this, void 0, void 0, function* () {
+                        return this.jobRegistration(job.getId()).catch((err) => {
+                            shared_1.logger.error(err);
+                            return err;
+                        });
+                    }), {
+                        logger: shared_1.logger,
+                    });
                     this.runningJob.push({ job, task, consumer });
                 }
                 catch (err) {
